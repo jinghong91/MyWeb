@@ -28,7 +28,7 @@ public abstract class AbstractDao<T> {
     }
 
     public T getByPK(Integer key) {
-        return getSession().get(persistenceClass, key);
+        return (T)getSession().get(persistenceClass, key);
     }
 
     public void persist(T entity) {

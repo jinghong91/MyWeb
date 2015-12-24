@@ -1,10 +1,25 @@
 package web.data.model;
 
+import org.hibernate.validator.constraints.Email;
 
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "USERS")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
+    @Column(name = "USERNAME")
+    @Size(min = 3)
     private String username;
+    @Column(name="PASSWORD")
+    @Size(min = 5)
     private String password;
+    @Column(name="EMAIL")
+    @Email
     private String email;
 
     public int getId() {

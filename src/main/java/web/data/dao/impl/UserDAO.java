@@ -13,4 +13,9 @@ public class UserDAO extends AbstractDao<User> implements IUserDAO {
     public List<User> getAll() {
         return createEntityCriteria().list();
     }
+
+    @Override
+    public void saveUser(User user) {
+        persist(user);
+    }
 }

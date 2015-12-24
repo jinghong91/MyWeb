@@ -5,6 +5,7 @@ import web.data.model.User;
 
 import java.util.List;
 
-public interface IUserDAO {
+public interface IUserDAO  {
     List<User> getAll();
+    void saveUser(User user);
 }
