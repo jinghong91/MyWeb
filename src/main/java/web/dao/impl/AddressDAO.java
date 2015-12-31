@@ -1,9 +1,6 @@
 package web.dao.impl;
 
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
 import web.dao.AbstractDAO;
 import web.dao.IAddressDAO;
@@ -20,8 +17,8 @@ public class AddressDAO extends AbstractDAO<Address> implements IAddressDAO {
     }
 
     @Override
-    public void AddAddress(Address address) {
-        persist(address);
+    public void saveOrUpdateAddress(Address address) {
+        saveOrUpdate(address);
     }
 
     @Override
@@ -31,6 +28,17 @@ public class AddressDAO extends AbstractDAO<Address> implements IAddressDAO {
                 .createAlias("client", "client")
                 .add(Restrictions.eq("client.id", clientId))
                 .list();
+    }
+
+    @Override
+    public void deleteAddressById(int addressId) {
+        delete(getByPK(addressId));
+    }
+
+    @Override
+    public Address getAddressById(int addressId) {
+        return (Address)createEntityCriteria()
+                .createAlias("client","client").uniqueResult();
     }
 
 }

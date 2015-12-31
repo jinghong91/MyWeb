@@ -19,4 +19,19 @@ public class AddressService implements IAddressService {
     public List<Address> getAddressListByClientId(int clientId) {
         return addressDAO.getAddressListByClientId(clientId);
     }
+
+    @Override
+    public void deleteAddressById(int addressId) {
+        addressDAO.deleteAddressById(addressId);
+    }
+
+    @Override
+    public Address getAddressById(int addressId) {
+        return addressDAO.getAddressById(addressId);
+    }
+
+    @Override
+    public void saveOrUpdateAddress(Address address) {
+        addressDAO.saveOrUpdateAddress(address);
+    }
 }

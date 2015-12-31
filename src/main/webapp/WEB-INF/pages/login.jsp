@@ -25,7 +25,11 @@
         </c:if>
     </div>
 </div>
-<form action="<c:url value="/j_spring_security_check" />" method="post">
+
+
+
+
+<form action="<c:url value='/auth/login_check?targetUrl=${targetUrl}'/>" method="post">
     <div class="panel panel-default" align="center" style="margin-top: 200px">
         <div class="panel-body">
             <c:if test="${not empty error}">
@@ -49,6 +53,9 @@
             <br/>
             <div class="row">
                 <div class="col-xs-12">
+                    <c:if test="${empty loginUpdate}">
+                        Remember Me: <input type="checkbox" name="remember-me" />
+                    </c:if>
                     <input type="submit" name="submit" value="<spring:message code="global.submit"/>"
                            class="btn btn-primary btn-large">
                 </div>

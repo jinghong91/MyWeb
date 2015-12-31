@@ -8,4 +8,7 @@ public interface IClientDAO {
     List<Client> getAll();
 
     void addClient(Client client);
+
+    Client getClientById(int clientId);
+
 }

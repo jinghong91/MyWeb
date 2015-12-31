@@ -9,4 +9,5 @@ public interface IClientService {
 
     void addClient(Client client);
 
+    Client getClientById(int clientId);
 }

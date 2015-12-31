@@ -25,8 +25,8 @@
         function rowClick(row){
             $(".selected").toggleClass('selected');
             $(row).toggleClass('selected');
-            $("selectedClientId").val(row.id);
-            $("#addressDiv").show();
+            $("#selectedClientId").val(row.id);
+            $("#addressTable").show();
             getAddressViaAjax(row.id);
         }
 
@@ -41,20 +41,20 @@
                     $('#addressTable tbody tr[id^=addressRowEdit_]').remove();
                     $.each(data, function (index, address) {
                         //for data display
-                        $('#addressTable tbody').append(
+                        $('#addressTable tbody').prepend(
                                 "<tr id='addressRowData_"+address.id+"'>" +
-                                "<td>" + address.receiver + "</td>" +
-                                "<td>" + address.address + "</td>" +
-                                "<td>" + address.phoneNumber + "</td>" +
+                                "<td id='tdReceiver_"+address.id+"'>" + address.receiver + "</td>" +
+                                "<td id='tdAddress_"+address.id+"'>" + address.address + "</td>" +
+                                "<td id='tdPhone_"+address.id+"'>" + address.phoneNumber + "</td>" +
                                 "<td><img src='<c:url value='/resources/image/delete_icon.png' />' class='img-icon' alt='delete' onclick='javascript:deleteAddress("+address.id+")'/></td>" +
                                 "<td><img src=' <c:url value='/resources/image/edit_icon.png' /> ' class='img-icon' alt='edit' onclick='javascript:editAddress("+address.id+")'/></td>" +
                                 "</tr>")
                         //for data edit
-                        $('#addressTable tbody').append(
-                                "<tr id='addressRowEdit_"+address.id+"' style='display : none'>" +
-                                "<td><input type='text' class='input-sm' id='editReceiver_'"+address.id+"/></td>" +
-                                "<td><input type='text' class='input-sm' id='editAddress_'"+address.id+"/></td>" +
-                                "<td><input type='text' class='input-sm' id='editPhone_'"+address.id+"/></td>" +
+                        $('#addressTable tbody').prepend(
+                                "<tr id='addressRowEdit_"+address.id+"' hidden >" +
+                                "<td><input type='text' class='input-sm' id='editReceiver_"+address.id+"' placeholder='"+address.receiver+"'/></td>" +
+                                "<td><input type='text' class='input-sm' id='editAddress_"+address.id+"' placeholder='"+address.address+"'/></td>" +
+                                "<td><input type='text' class='input-sm' id='editPhone_" + address.id + "' placeholder='"+ address.phoneNumber +"'/></td>" +
                                 "<td><img src=' <c:url value='/resources/image/confirm_icon.png' />'  class='img-icon' alt='confirm' onclick='javascript:updateAddress("+address.id+")'/></td>" +
                                 "<td><img src=' <c:url value='/resources/image/cancel_icon.png' />'   class='img-icon' alt='cancel' onclick='javascript:cancelUpdateAddress("+address.id+")'/></td>" +
                                 "</tr>")
@@ -63,14 +63,37 @@
             });
         }
 
-        function deleteAddress(id){
-
+        function deleteAddress(addressId){
+            $.ajax({
+                type : "POST",
+                url : "<c:url value='/ajax/client/deleteAddress?addressId=' />"+addressId,
+                timeout : 100000,
+                success : function() {
+                    console.log($("#selectedClientId").val());
+                    getAddressViaAjax($("#selectedClientId").val());
+                }
+            });
         }
         function editAddress(id){
+            //reset input value
+            $("#editReceiver_"+id).val($("#tdReceiver_"+id).html());
+            $("#editAddress_"+id).val($("#tdAddress_"+id).html());
+            $("#editPhone_"+id).val($("#tdPhone_"+id).html());
+
             $("#addressRowData_"+id).hide();
             $("#addressRowEdit_"+id).show();
         }
+
         function updateAddress(id){
+            var selectedClientId=$("#selectedClientId").val();
+            var address = {}
+            address["id"]=id;
+            address["receiver"] = $("#editReceiver_"+id).val();
+            address["address"] = $("#editAddress_"+id).val();
+            address["phoneNumber"]=$("#editPhone_"+id).val();
+
+            saveOrUpdateAddressViaAjax(address,selectedClientId);
+
             $("#addressRowData_"+id).show();
             $("#addressRowEdit_"+id).hide();
         }
@@ -79,19 +102,45 @@
             $("#addressRowData_"+id).show();
             $("#addressRowEdit_"+id).hide();
         }
+
         function addAddress(){
             $("#addressRow_new").show();
             $("#addressRow_addIcon").hide();
         }
 
         function confirmAddAddress(){
+            var selectedClientId=$("#selectedClientId").val();
+            var newAddress = {}
+            newAddress["receiver"] = $("#newReceiver").val();
+            newAddress["address"] = $("#newAddress").val();
+            newAddress["phoneNumber"]=$("#newPhone").val();
+
+            saveOrUpdateAddressViaAjax(newAddress,selectedClientId);
+
             $("#addressRow_new").hide();
             $("#addressRow_addIcon").show();
+
+            $("#newReceiver").val("");
+            $("#newAddress").val("");
+            $("#newPhone").val("");
         }
 
         function cancelAddAddress(){
             $("#addressRow_new").hide();
             $("#addressRow_addIcon").show();
+        }
+
+        function saveOrUpdateAddressViaAjax(address,clientId){
+            $.ajax({
+                type : "POST",
+                contentType : "application/json",
+                url : "<c:url value='/ajax/client/saveOrUpdateAddress?clientId=' />"+clientId,
+                timeout : 100000,
+                data : JSON.stringify(address),
+                success : function() {
+                    getAddressViaAjax(clientId);
+                }
+            });
         }
     </script>
 </head>
@@ -120,7 +169,7 @@
         </table>
         <div>
             <input type="hidden" value="0" id="selectedClientId">
-            <table class="table" id="addressTable" display="none">
+            <table class="table" id="addressTable" hidden>
                 <thead>
                 <tr>
                     <th><spring:message code="client.table.address.head.receiver"/></th>
@@ -131,7 +180,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr id="addressRow_new" style="display: none">
+                <tr id="addressRow_new" hidden>
                     <td><input type="text" class="input-sm" id="newReceiver"></td>
                     <td><input type="text" class="input-sm" id="newAddress"></td>
                     <td><input type="text" class="input-sm" id="newPhone"></td>
@@ -139,8 +188,8 @@
                     <td><img src="<c:url value='/resources/image/cancel_icon.png' />" class="img-icon" alt="cancel" onclick="javascript:cancelAddAddress()"></td>
                 </tr>
                 <tr id="addressRow_addIcon">
-                    <td colspan="3"></td>
-                    <td colspan="2"><img src="<c:url value='/resources/image/add_icon.png' />" class="img-icon" alt="add" onclick="javascript:addAddress()"></td>
+                    <td colspan="4"></td>
+                    <td><img src="<c:url value='/resources/image/add_icon.png' />" class="img-icon" alt="add" onclick="javascript:addAddress()"></td>
                 </tr>
                 </tbody>
             </table>

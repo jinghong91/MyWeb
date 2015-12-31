@@ -24,10 +24,10 @@ public class OrderItem {
     private BigDecimal sellPrice;
 
     @Column(name = "STATUS")
-    private int status;
+    private String status;
 
-    @Column(name = "PAYMENT_STATU")
-    private String paymentStatu;
+    @Column(name = "PAYMENT_STATUS")
+    private String paymentStatus;
 
     @Column(name = "PAID_AMOUNT")
     private BigDecimal paidAmount;
@@ -97,20 +97,20 @@ public class OrderItem {
         this.sellPrice = sellPrice;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getPaymentStatu() {
-        return paymentStatu;
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setPaymentStatu(String paymentStatu) {
-        this.paymentStatu = paymentStatu;
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     public BigDecimal getPaidAmount() {

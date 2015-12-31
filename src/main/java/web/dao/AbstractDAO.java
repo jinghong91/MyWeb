@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 public abstract class AbstractDAO<T> {
     private final Class<T> persistenceClass;
 
-    @SuppressWarnings("Uncheck")
+    @SuppressWarnings("unchecked")
     protected AbstractDAO() {
         this.persistenceClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
@@ -24,22 +24,25 @@ public abstract class AbstractDAO<T> {
         return session;
     }
 
-    public T getByPK(Integer key) {
+    protected T getByPK(Integer key) {
         return (T) getSession().get(persistenceClass, key);
     }
 
-    public void persist(T entity) {
+    protected void persist(T entity) {
         getSession().persist(entity);
     }
 
-    public void delete(T entity) {
+    protected void delete(T entity) {
         getSession().delete(entity);
     }
 
-    public void update(T entity) {
+    protected void update(T entity) {
         getSession().update(entity);
     }
 
+    protected void saveOrUpdate(T entity){
+        getSession().saveOrUpdate(entity);
+    }
     protected Criteria createEntityCriteria() {
         return getSession().createCriteria(persistenceClass);
     }
