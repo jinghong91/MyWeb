@@ -20,4 +20,9 @@ public class OrderItemService extends AbstractDAO<OrderItem> implements IOrderIt
     public List<OrderItem> getAll() {
         return orderItemDAO.getAll();
     }
+
+    @Override
+    public void addOrderItem(OrderItem orderItem) {
+        orderItemDAO.addOrderItem(orderItem);
+    }
 }

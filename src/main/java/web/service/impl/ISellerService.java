@@ -1,13 +1,10 @@
-package web.dao;
+package web.service.impl;
 
 import web.model.Seller;
 
 import java.util.List;
 
-public interface ISellerDAO {
+public interface ISellerService {
     List<Seller> getAll();
-
-    void AddSeller(Seller seller);
-
     Seller getById(int id);
 }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IOrderItemService {
     List<OrderItem> getAll();
+    void addOrderItem(OrderItem orderItem);
 }

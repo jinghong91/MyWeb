@@ -18,6 +18,7 @@
     <script type="text/javascript" class="init">
         $(document).ready(function () {
             $('#orderTable').DataTable();
+
         });
 
         function clientTypeChanged() {
@@ -36,19 +37,26 @@
             $("#index").val(id);
             $("#newOrderTable tbody").append(
                     "<tr id='newOrderRow_" + id + "'>" +
+                    "<input type='hidden' name='newOrderItemList["+id+"].boughtCurrency' value='${newOrderForm.currency}'/>" +
                     "<td><input type='text' name='newOrderItemList[" + id + "].name' id='orderName_" + id + "' class='input-sm'/></td>" +
-                    "<td><input type='text' name='newOrderItemList[" + id + "].originPriceEuro' id='orderPriceEuro_" + id + "' class='input-sm' value='0' size='7' maxlength='10'oninput='javascript:onInputPriceEuro("+id+")'/></td>" +
-                    "<td><input type='hidden' name='newOrderItemList[" + id + "].originPriceCNY' id='orderPriceCNY_" + id + "'  value='0'/></td>" +
-                    "<td><input type='text' name='newOrderItemList[" + id + "].sellPrice' id='orderSellPrice_" + id + "' class='input-sm' value='0' size='7' maxlength='10'/></td>" +
+                    "<td><input type='text' name='newOrderItemList[" + id + "].originPriceEuro' id='orderPriceEuro_" + id + "' class='input-sm' value='0' size='7' maxlength='10'oninput='javascript:onInputPriceEuro("+id+",this)'/></td>" +
+                    "<td><label id='labelOrderPriceCNY_"+ id + "'' >0</label></td>" +
+                    "<td><input type='text' name='newOrderItemList[" + id + "].sellPrice' id='orderSellPrice_" + id + "' class='input-sm' value='0' size='7' maxlength='10' oninput='javascrip:onInputSellPrice("+id+",this)' /></td>" +
                     "<td>" +
-                        "<select name='newOrderItemList["+id+"].paymentStatus' id='orderPaymentStatus_"+id+"' class='input-sm' >" +
+                        "<select name='newOrderItemList["+id+"].paymentStatus' id='orderPaymentStatus_"+id+"' class='input-sm' oninput='javascript:onInputPriceEuro("+id+")'>" +
                             "<option value='notPay'><spring:message code='order.select.newOrder.notPay' /></option>"+
                             "<option value='partPaid'><spring:message code='order.select.newOrder.partPaid' /></option>"+
                             "<option value='paid' selected='true'><spring:message code='order.select.newOrder.paid' /></option>"+
                         "</select>"+
                     " </td>"+
-                    "<td><input type='text' name='newOrderItemList[" + id + "].paidAmount' id='orderPaidAmount_" + id + "' class='input-sm' value='0'size='7' maxlength='10'/></td>" +
-                    "<td><input type='checkbox' name='newOrderItemList[" + id + "].sellWithYu' id='orderSellWithYu_" + id + "' class='input-sm'/></td>" +
+                    "<td><input type='text' name='newOrderItemList[" + id + "].paidAmount' id='orderPaidAmount_" + id + "' class='input-sm' value='0'size='7' maxlength='10'oniput='javascrip:onlyNumber(this)'></td>" +
+                    "<td>" +
+                    "   <select name='newOrderItemList["+id+"].sellerList' id='orderSellerList_"+id+"' class='input-sm' multiple='true' size='2'>" +
+                    "       <c:forEach items='${newOrderForm.sellerList}' var='seller'>"   +
+                    "           <option value='${seller.id}' label='${seller.name}'/>" +
+                    "       </c:forEach>"   +
+                    "   </select>" +
+                    "</td>" +
                     "<td><img alt='delete' src='<c:url value='/resources/image/cancel_icon.png' /> ' class='img-icon' onclick='javascript:deleteOrderItem("+id+")'/></td>" +
                     "</tr>");
         }
@@ -57,38 +65,50 @@
             $("#orderName_"+id).val(null);
         }
 
-        function onInputCurrency(){
-            var currency=$("#currency").val();
-            $("#newOrderTable tbody tr").each(function(index){
-                updatePriceCNY(index,currency);
-            });
-        }
-
-        function onInputPriceEuro(index){
+        function onInputPriceEuro(index,elem){
+            onlyNumber(elem);
             var currency=$("#currency").val();
             updatePriceCNY(index,currency);
         }
 
         function updatePriceCNY(index,currency){
             var euroPrice=$("#orderPriceEuro_"+index).val();
-            $("#orderPriceCNY_"+index).val(euroPrice*currency);
-            $("#labelOrderPriceCNY_"+index).html(euroPrice*currency);
+            $("#labelOrderPriceCNY_"+index).html((euroPrice*currency).toFixed(2));
         }
 
+        function paymentStatusUpdate(index){
+            var paymentStatus= $("#orderPaymentStatus_"+index).val();
+            var paidAmount= $("#orderPaidAmount_"+index);
+            if(paymentStatus=="notPay"){
+                paidAmount.prop( "readonly", true );
+                paidAmount.attr("tabindex",-1);
+                paidAmount.val(0);
+            }else if(paymentStatus=="paid"){
+                var sellPrice= $("#orderSellPrice_"+index).val();
+                paidAmount.prop( "readonly", true );
+                paidAmount.attr("tabindex",-1);
+                paidAmount.val(sellPrice);
+            }else if(paymentStatus=="partPaid"){
+                paidAmount.prop( "readonly", false );
+                paidAmount.attr("tabindex",0);
+            }
+        }
 
-         function numberValidation(event){
+       function onInputSellPrice(index,elem){
+           onlyNumber(elem);
+           if($("#orderPaymentStatus_"+index).val()=="paid"){
+               var paidAmount= $("#orderPaidAmount_"+index);
+               var sellPrice= $("#orderSellPrice_"+index).val();
+               paidAmount.val(sellPrice);
+               paidAmount.prop( "readonly", true );
+               paidAmount.attr("tabindex",0);
+           }
+       }
 
-            // Allow special chars + arrows
-            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9
-                    || event.keyCode == 27 || event.keyCode == 13
-                    || (event.keyCode == 65 && event.ctrlKey === true)
-                    || (event.keyCode >= 35 && event.keyCode <= 39)){
-                return;
-            }else {
-                // If it's not a number stop the keypress
-                if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-                    event.preventDefault();
-                }
+        function onlyNumber(elem) {
+            var temp=elem.value.replace(/[^0-9\.]/g, '');
+            if (elem.value != temp) {
+                elem.value = temp;
             }
         }
     </script>
@@ -99,7 +119,7 @@
     <div class="panel-heading">
     </div>
     <div class="panel-body">
-        <table id="orderTable" class="table" cellspacing="0" width="100%">
+        <table id="orderTable" class="table"  width="100%">
             <thead>
             <tr role="row">
                 <th><spring:message code="order.table.head.name"/></th>
@@ -110,7 +130,7 @@
                 <th><spring:message code="order.table.head.priceCNY"/></th>
                 <th><spring:message code="order.table.head.paymentStatus"/></th>
                 <th><spring:message code="order.table.head.paidAmount"/></th>
-                <th><spring:message code="order.table.head.sellWithYu"/></th>
+                <th><spring:message code="order.table.head.sellers"/></th>
                 <th><spring:message code="order.table.head.sellPrice"/></th>
                 <%--<th><spring:message code="order.table.head.profit" /></th>--%>
                 <%--<th><spring:message code="order.table.head.orderDate" /></th>--%>
@@ -128,7 +148,12 @@
                     <td>${orderItem.originPriceCNY}</td>
                     <td>${orderItem.paymentStatus}</td>
                     <td>${orderItem.paidAmount}</td>
-                    <td>${orderItem.sellWithYu}</td>
+                    <td>
+                        <c:forEach items="${orderItem.sellerList}" var="seller" varStatus="loop">
+                         ${seller.name}
+                            <c:if test="${!loop.last}">,</c:if>
+                        </c:forEach>
+                    </td>
                     <td>${orderItem.sellPrice}</td>
                         <%--<th><spring:message code="order.table.head.profit" /></th>--%>
                         <%--<th><spring:message code="order.table.head.orderDate" /></th>--%>
@@ -159,8 +184,8 @@
                 <form:input cssClass="input-sm" id="newClientName" path="newClientName" cssStyle="display :none"/>
             </div>
             <div class="form-group">
-                <label for="currency" ><spring:message code="global.currency" /></label>
-                <input type="text" class="input-sm" value="7" id="currency"  oninput="javascript:onInputCurrency()"/>
+                <label ><spring:message code="global.currency" />:</label>
+                <form:hidden path="currency" id="currency" />${newOrderForm.currency}
             </div>
             <div class="form-group">
                 <table class="table" id="newOrderTable">
@@ -172,29 +197,34 @@
                         <th><spring:message code="order.table.head.sellPrice"/></th>
                         <th><spring:message code="order.table.head.paymentStatus"/></th>
                         <th><spring:message code="order.table.head.paidAmount"/></th>
-                        <th><spring:message code="order.table.head.sellWithYu"/></th>
+                        <th><spring:message code="order.table.head.sellers"/></th>
                         <th><img alt="add" src="<c:url value="/resources/image/add_icon.png" /> " class="img-icon" onclick="addOrderItem()"/></th>
                     </tr>
                     </thead>
                     <tbody>
                     <input type="hidden" value="0" id="index"/>
                     <tr id="newOrderRow_0">
+                        <form:hidden path="newOrderItemList[0].boughtCurrency" value="${newOrderForm.currency}"/>
                         <td><form:input type="text" path="newOrderItemList[0].name" id="orderName_0" class="input-sm"/></td>
-                        <td><form:input type="text" path="newOrderItemList[0].originPriceEuro" id="orderPriceEuro_0" class="input-sm" maxlength="10" size="7" value="0" oninput="javascript:onInputPriceEuro(0)"/></td>
+                        <td><form:input type="text" path="newOrderItemList[0].originPriceEuro" id="orderPriceEuro_0" class="input-sm numbersOnly" maxlength="10" size="7" value="0" oninput="javascript:onInputPriceEuro(0,this)"/></td>
+                        <td><label id="labelOrderPriceCNY_0" >0</label></td>
+                        <td><form:input type="text" path="newOrderItemList[0].sellPrice" id="orderSellPrice_0" class="input-sm" maxlength="10" size="7"  value="0" oninput="javascrip:onInputSellPrice(0,this)"/></td>
                         <td>
-                            <form:hidden path="newOrderItemList[0].originPriceCNY" id="orderPriceCNY_0" value="0"/>
-                            <label id="labelOrderPriceCNY_0" >0</label>
-                        </td>
-                        <td><form:input type="text" path="newOrderItemList[0].sellPrice" id="orderSellPrice_0" class="input-sm" maxlength="10" size="7"  value="0"/></td>
-                        <td>
-                            <form:select path="newOrderItemList[0].paymentStatus" id="orderPaymentStatus_0" class="input-sm" >
+                            <form:select path="newOrderItemList[0].paymentStatus" id="orderPaymentStatus_0" class="input-sm" onchange="javascript:paymentStatusUpdate(0)">
                                 <form:option value="notPay"><spring:message code="order.select.newOrder.notPay" /></form:option>
                                 <form:option value="partPaid"><spring:message code="order.select.newOrder.partPaid" /></form:option>
                                 <form:option value="paid" selected="true"><spring:message code="order.select.newOrder.paid" /></form:option>
                             </form:select>
                         </td>
-                        <td><form:input type="text" path="newOrderItemList[0].paidAmount" id="orderPaidAmount_0" class="input-sm" maxlength="10" size="7" value="0"/></td>
-                        <td><form:checkbox path="newOrderItemList[0].sellWithYu" id="orderSellWithYu_0" class="input-sm"/></td>
+                        <td><form:input type="text" path="newOrderItemList[0].paidAmount" id="orderPaidAmount_0" class="input-sm" maxlength="10" size="7" value="0" oniput='javascrip:onlyNumber(this)'/></td>
+                        <td>
+
+                            <form:select path="newOrderItemList[0].sellerList" id="orderSellerList_0" class="input-sm"  multiple="true" size="2">
+                       <c:forEach items="${newOrderForm.sellerList}" var="seller">
+                           <option value="${seller.id}">${seller.name}</option>
+                       </c:forEach>
+                            </form:select>
+                        </td>
                         <td><img alt="delete" src="<c:url value="/resources/image/cancel_icon.png" /> " class="img-icon" onclick="deleteOrderItem(0)"/></td>
                     </tr>
                     </tbody>
@@ -202,6 +232,6 @@
             </div>
             <input type="submit" class="btn btn-primary btn-sm" value="<spring:message code='global.submit' />"/>
         </form:form>
-    </div>
+    </div></div>
 </body>
 </html>

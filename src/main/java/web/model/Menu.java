@@ -1,6 +1,8 @@
 package web.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "MENU")
@@ -12,10 +14,25 @@ public class Menu {
 
     @Column(name = "NAME")
     private String name;
+
     @Column(name = "URL")
     private String url;
-    @Column(name = "description")
+
+    @Column(name = "DESCRIPTION")
     private String description;
+
+    @Column(name = "HAS_SUBMENU")
+    private boolean hasSubmenu;
+
+    @ManyToOne
+    @JoinColumn(name = "PARENT_MENU_ID")
+    private Menu parentMenu;
+
+    @OneToMany(mappedBy="parentMenu")
+    private List<Menu> subMenuList = new ArrayList<Menu>();
+
+    @Column(name = "ORDER")
+    private int order;
 
     public Integer getId() {
         return id;
@@ -47,5 +64,37 @@ public class Menu {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isHasSubmenu() {
+        return hasSubmenu;
+    }
+
+    public void setHasSubmenu(boolean hasSubmenu) {
+        this.hasSubmenu = hasSubmenu;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public Menu getParentMenu() {
+        return parentMenu;
+    }
+
+    public void setParentMenu(Menu parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
+    public List<Menu> getSubMenuList() {
+        return subMenuList;
+    }
+
+    public void setSubMenuList(List<Menu> subMenuList) {
+        this.subMenuList = subMenuList;
     }
 }

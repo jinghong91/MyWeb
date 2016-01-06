@@ -1,7 +1,14 @@
 package web.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.util.AutoPopulatingList;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ORDER_ITEM")
@@ -11,14 +18,15 @@ public class OrderItem {
     @Column(name = "ID_ORDER_ITEM")
     private Integer id;
 
+    @NotEmpty
     @Column(name = "NAME")
     private String name;
 
     @Column(name = "ORIGIN_PRICE_EURO")
     private BigDecimal originPriceEuro;
 
-    @Column(name = "ORIGIN_PRICE_CNY")
-    private BigDecimal originPriceCNY;
+    @Column(name = "BOUGHT_CURRENCY")
+    private BigDecimal boughtCurrency;
 
     @Column(name = "SELL_PRICE")
     private BigDecimal sellPrice;
@@ -35,11 +43,11 @@ public class OrderItem {
     @Column(name = "REMARK")
     private String remark;
 
-    @Column(name = "SELL_WITH_YU")
-    private boolean sellWithYu;
-
     @Column(name = "DELIVERY_TYPE")
     private int deliveryType;
+
+    @Column(name = "CREATE_DATE")
+    private Date createDate;
 
     @ManyToOne
     @JoinColumn(name = "ADDRESS_ID")
@@ -56,6 +64,15 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "CLIENT_ID")
     private Client client;
+
+    @ManyToMany
+    @JoinTable(name = "ORDER_ITEM_SELLER", joinColumns = {
+            @JoinColumn(name = "ORDER_ITEM_ID", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "SELLER_ID",
+                    nullable = false, updatable = false)})
+    private List<Seller> sellerList=new ArrayList<Seller>();
+
+
 
     public Integer getId() {
         return id;
@@ -81,13 +98,6 @@ public class OrderItem {
         this.originPriceEuro = originPriceEuro;
     }
 
-    public BigDecimal getOriginPriceCNY() {
-        return originPriceCNY;
-    }
-
-    public void setOriginPriceCNY(BigDecimal originPriceCNY) {
-        this.originPriceCNY = originPriceCNY;
-    }
 
     public BigDecimal getSellPrice() {
         return sellPrice;
@@ -129,14 +139,6 @@ public class OrderItem {
         this.remark = remark;
     }
 
-    public boolean isSellWithYu() {
-        return sellWithYu;
-    }
-
-    public void setSellWithYu(boolean sellWithYu) {
-        this.sellWithYu = sellWithYu;
-    }
-
     public Address getAddress() {
         return address;
     }
@@ -169,7 +171,50 @@ public class OrderItem {
         this.client = client;
     }
 
-  /*  public BigDecimal getTotalProfit() {
+    public BigDecimal getBoughtCurrency() {
+        return boughtCurrency;
+    }
+
+    public void setBoughtCurrency(BigDecimal boughtCurrency) {
+        this.boughtCurrency = boughtCurrency;
+    }
+
+    public int getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(int deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public List<Seller> getSellerList() {
+        return sellerList;
+    }
+
+    public void setSellerList(List<Seller> sellerList) {
+        this.sellerList = sellerList;
+    }
+
+    public void addSeller(Seller seller){
+        if(!this.sellerList.contains(seller)){
+            this.sellerList.add(seller);
+        }
+    }
+
+    public BigDecimal getOriginPriceCNY() {
+        return this.originPriceEuro.multiply(this.boughtCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+    }
+
+
+    /*  public BigDecimal getTotalProfit() {
         if (this.status >= 4) {
             BigDecimal fee = new BigDecimal(0);
             switch (this.deliveryType) {

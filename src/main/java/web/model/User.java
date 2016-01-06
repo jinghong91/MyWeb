@@ -21,7 +21,7 @@ public class User {
     @NotNull
     private String password;
     @Column(name = "ENABLED")
-    private String enabled;
+    private boolean enabled;
 
     public Integer getId() {
         return id;
@@ -47,11 +47,11 @@ public class User {
         this.password = password;
     }
 
-    public String getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(String enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 }

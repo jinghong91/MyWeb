@@ -68,4 +68,9 @@ public class Client {
     public void setAddressList(List<Address> addressList) {
         this.addressList = addressList;
     }
+
+    public Client(String name){
+        this.name=name;
+    }
+    public Client(){}
 }

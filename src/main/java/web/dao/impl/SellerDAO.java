@@ -18,4 +18,9 @@ public class SellerDAO extends AbstractDAO<Seller> implements ISellerDAO {
     public void AddSeller(Seller seller) {
         persist(seller);
     }
+
+    @Override
+    public Seller getById(int id) {
+        return getByPK(id);
+    }
 }

@@ -1,5 +1,9 @@
 package web.dao.impl;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Distinct;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
 import web.dao.AbstractDAO;
 import web.dao.IOrderItemDAO;
@@ -12,10 +16,12 @@ public class OrderItemDAO extends AbstractDAO<OrderItem> implements IOrderItemDA
     @Override
     public List<OrderItem> getAll() {
         return createEntityCriteria()
-                .createAlias("client", "client")
-                .createAlias("personalDelivery", "personalDelivery")
-                .createAlias("commonDelivery", "commonDelivery")
-                .createAlias("address", "address")
+                .createAlias("client", "client", JoinType.LEFT_OUTER_JOIN)
+                .createAlias("personalDelivery", "personalDelivery", JoinType.LEFT_OUTER_JOIN)
+                .createAlias("commonDelivery", "commonDelivery", JoinType.LEFT_OUTER_JOIN)
+                .createAlias("address", "address", JoinType.LEFT_OUTER_JOIN)
+                .createAlias("sellerList","sellerList", JoinType.LEFT_OUTER_JOIN)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .list();
     }
 
