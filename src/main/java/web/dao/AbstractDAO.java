@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
 public abstract class AbstractDAO<T> {
@@ -42,6 +43,10 @@ public abstract class AbstractDAO<T> {
 
     protected void saveOrUpdate(T entity){
         getSession().saveOrUpdate(entity);
+    }
+
+    protected Serializable save(T entity){
+        return getSession().save(entity);
     }
     protected Criteria createEntityCriteria() {
         return getSession().createCriteria(persistenceClass);

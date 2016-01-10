@@ -25,4 +25,14 @@ public class OrderItemService extends AbstractDAO<OrderItem> implements IOrderIt
     public void addOrderItem(OrderItem orderItem) {
         orderItemDAO.addOrderItem(orderItem);
     }
+
+    @Override
+    public OrderItem getOrderById(int id) {
+        return orderItemDAO.getOrderById(id);
+    }
+
+    @Override
+    public void updateOrder(OrderItem orderItem) {
+        orderItemDAO.updateOrder(orderItem);
+    }
 }

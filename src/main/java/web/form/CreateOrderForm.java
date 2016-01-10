@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class addOrderForm {
+public class CreateOrderForm {
     private boolean newClient;
 
     private int existedClient;
@@ -17,10 +17,11 @@ public class addOrderForm {
 
     private List<Client> clientList;
 
-    private List<OrderItem> newOrderItemList=new ArrayList<OrderItem>();
+    private List<OrderItem> newOrderItemList = new ArrayList<OrderItem>();
 
     private BigDecimal currency;
-    private List<Seller> sellerList=new ArrayList<Seller>();
+
+    private List<Seller> sellerList = new ArrayList<Seller>();
 
     public boolean isNewClient() {
         return newClient;
@@ -77,4 +78,5 @@ public class addOrderForm {
     public void setSellerList(List<Seller> sellerList) {
         this.sellerList = sellerList;
     }
+
 }

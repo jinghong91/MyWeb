@@ -11,4 +11,7 @@ public interface IClientDAO {
 
     Client getClientById(int clientId);
 
+    Client getClientByName(String name);
+
+    void updateClient(Client client);
 }

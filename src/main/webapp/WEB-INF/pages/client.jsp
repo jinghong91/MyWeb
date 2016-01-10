@@ -13,7 +13,6 @@
     <link href="resources/css/custom.css" rel="stylesheet"/>
     <link href="resources/css/jquery.dataTables.min.css" rel="stylesheet"/>
 
-
     <script type="text/javascript" src="resources/js/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="resources/js/bootstrap.js"></script>
     <script type="text/javascript" src="resources/js/datatables.min.js"></script>
@@ -36,7 +35,6 @@
                 url : "<c:url value='/ajax/client/getAddressList?clientId=' />"+clientId,
                 timeout : 100000,
                 success : function(data) {
-                    console.log(data);
                     $('#addressTable tbody tr[id^=addressRowData_]').remove();
                     $('#addressTable tbody tr[id^=addressRowEdit_]').remove();
                     $.each(data, function (index, address) {
@@ -69,7 +67,6 @@
                 url : "<c:url value='/ajax/client/deleteAddress?addressId=' />"+addressId,
                 timeout : 100000,
                 success : function() {
-                    console.log($("#selectedClientId").val());
                     getAddressViaAjax($("#selectedClientId").val());
                 }
             });
@@ -152,9 +149,9 @@
         <table class="table" id="clientTable" >
             <thead>
             <tr>
-                <th><spring:message code="client.table.client.head.name"/></th>
-                <th><spring:message code="client.table.client.head.consumptionAmount"/></th>
-                <th><spring:message code="client.table.client.head.consumptionNumber"/></th>
+                <th><spring:message code="client.name"/></th>
+                <th><spring:message code="client.consumptionAmount"/></th>
+                <th><spring:message code="client.consumptionNumber"/></th>
             </tr>
             </thead>
             <tbody>
@@ -172,9 +169,9 @@
             <table class="table" id="addressTable" hidden>
                 <thead>
                 <tr>
-                    <th><spring:message code="client.table.address.head.receiver"/></th>
-                    <th><spring:message code="client.table.address.head.address"/></th>
-                    <th><spring:message code="client.table.address.head.phoneNumber"/></th>
+                    <th><spring:message code="address.receiver"/></th>
+                    <th><spring:message code="address.address"/></th>
+                    <th><spring:message code="address.phone"/></th>
                     <th></th>
                     <th></th>
                 </tr>

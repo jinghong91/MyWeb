@@ -1,6 +1,8 @@
 package web.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,13 @@ public class PersonalDelivery {
     @Column(name = "STATUS")
     private String status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
 
-    @OneToMany(mappedBy = "personalDelivery", fetch = FetchType.LAZY)
-    private List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+    @OneToOne(mappedBy = "personalDelivery")
+    @JsonIgnore
+    private OrderItem orderItem;
 
     public Integer getId() {
         return id;
@@ -58,11 +61,11 @@ public class PersonalDelivery {
         this.address = address;
     }
 
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
+    public OrderItem getOrderItem() {
+        return orderItem;
     }
 
-    public void setOrderItemList(List<OrderItem> orderItemList) {
-        this.orderItemList = orderItemList;
+    public void setOrderItem(OrderItem orderItem) {
+        this.orderItem = orderItem;
     }
 }

@@ -1,9 +1,14 @@
 package web.model;
 
+import org.hibernate.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.AutoPopulatingList;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -18,7 +23,6 @@ public class OrderItem {
     @Column(name = "ID_ORDER_ITEM")
     private Integer id;
 
-    @NotEmpty
     @Column(name = "NAME")
     private String name;
 
@@ -57,22 +61,22 @@ public class OrderItem {
     @JoinColumn(name = "COMMON_DELIVERY_ID")
     private CommonDelivery commonDelivery;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "PERSONAL_DELIVERY_ID")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private PersonalDelivery personalDelivery;
 
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ORDER_ITEM_SELLER", joinColumns = {
             @JoinColumn(name = "ORDER_ITEM_ID", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "SELLER_ID",
                     nullable = false, updatable = false)})
     private List<Seller> sellerList=new ArrayList<Seller>();
-
-
 
     public Integer getId() {
         return id;

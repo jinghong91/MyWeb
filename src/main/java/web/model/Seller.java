@@ -1,5 +1,6 @@
 package web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.util.AutoPopulatingList;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Seller {
     @Column(name = "NAME")
     private String name;
     @ManyToMany(mappedBy = "sellerList",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<OrderItem> orderItemList=new ArrayList<OrderItem>();
 
     public Integer getId() {
@@ -41,13 +43,6 @@ public class Seller {
     }
 
     public void setOrderItemList(List<OrderItem> orderItemList) {
-        if(orderItemList==null){
-            this.orderItemList=new ArrayList<OrderItem>();
-        }else{
             this.orderItemList=orderItemList;
-        }
-        for(OrderItem orderItem : this.orderItemList){
-            orderItem.addSeller(this);
-        }
     }
 }

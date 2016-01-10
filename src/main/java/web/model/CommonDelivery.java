@@ -15,8 +15,8 @@ public class CommonDelivery {
     @Column(name = "ID_COMMON_DELIVERY")
     private Integer id;
 
-    @Column(name = "REF_PACKAGE")
-    private String refPackage;
+    @Column(name = "TYPE")
+    private String type;
 
     @Column(name = "SEND_DATE")
     private Date sendDate;
@@ -24,7 +24,15 @@ public class CommonDelivery {
     @Column(name = "DELIVERY_FEE")
     private BigDecimal deliveryFee;
 
-    @OneToMany(mappedBy = "commonDelivery", fetch = FetchType.LAZY)
+    @Column(name = "TAX_REFUND")
+    private BigDecimal taxRefund;
+
+    @Column(name = "TARIFF")
+    private BigDecimal tariff;
+
+    @Column(name = "STATUS")
+    private String stauts;
+    @OneToMany(mappedBy = "commonDelivery")
     private List<OrderItem> orderItemList = new ArrayList<OrderItem>();
 
     public Integer getId() {
@@ -33,14 +41,6 @@ public class CommonDelivery {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getRefPackage() {
-        return refPackage;
-    }
-
-    public void setRefPackage(String refPackage) {
-        this.refPackage = refPackage;
     }
 
     public Date getSendDate() {
@@ -66,4 +66,37 @@ public class CommonDelivery {
     public void setOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public BigDecimal getTaxRefund() {
+        return taxRefund;
+    }
+
+    public void setTaxRefund(BigDecimal taxRefund) {
+        this.taxRefund = taxRefund;
+    }
+
+    public BigDecimal getTariff() {
+        return tariff;
+    }
+
+    public void setTariff(BigDecimal tariff) {
+        this.tariff = tariff;
+    }
+
+    public String getStauts() {
+        return stauts;
+    }
+
+    public void setStauts(String stauts) {
+        this.stauts = stauts;
+    }
 }
+

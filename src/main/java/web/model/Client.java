@@ -20,10 +20,10 @@ public class Client {
     private String name;
 
     @Column(name = "CONSUMPTION_AMOUNT")
-    private BigDecimal consumptionAmount;
+    private BigDecimal consumptionAmount=new BigDecimal(0);
 
     @Column(name = "CONSUMPTION_NUMBER")
-    private int consumptionNumber;
+    private int consumptionNumber=0;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     @JsonIgnore

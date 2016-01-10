@@ -31,4 +31,14 @@ public class ClientService extends AbstractDAO<Client> implements IClientService
         return clientDAO.getClientById(clientId);
     }
 
+    @Override
+    public Client getClientByName(String name) {
+        return clientDAO.getClientByName(name);
+    }
+
+    @Override
+    public void updateClient(Client client) {
+         clientDAO.updateClient(client);
+    }
+
 }

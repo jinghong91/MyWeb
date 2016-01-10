@@ -6,4 +6,12 @@ table.dataTable thead > tr {
     height: 20px;
 }
 
+.text-error{
+    color: red;
+}
+
+.input-error{
+    background-color:#FF709D;
+}
+
 

@@ -13,25 +13,27 @@ import web.service.IClientService;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/ajax/client")
 public class AjaxClientController {
 
     @Autowired
     IAddressService addressService;
-@Autowired
+    @Autowired
     IClientService clientService;
-    @RequestMapping(value = "/ajax/client/getAddressList")
+
+    @RequestMapping(value = "/getAddressList")
     public List<Address> getAddressListViaAjax(@RequestParam int clientId) {
         return addressService.getAddressListByClientId(clientId);
     }
 
-    @RequestMapping(value="/ajax/client/deleteAddress")
-    public void deleteAddress(@RequestParam int addressId){
+    @RequestMapping(value = "/deleteAddress")
+    public void deleteAddress(@RequestParam int addressId) {
         addressService.deleteAddressById(addressId);
     }
 
-    @RequestMapping(value = "/ajax/client/saveOrUpdateAddress")
-    public void saveOrUpdateAddress(@RequestBody Address address,@RequestParam int clientId){
-        Client client=clientService.getClientById(clientId);
+    @RequestMapping(value = "/saveOrUpdateAddress")
+    public void saveOrUpdateAddress(@RequestBody Address address, @RequestParam int clientId) {
+        Client client = clientService.getClientById(clientId);
         address.setClient(client);
         addressService.saveOrUpdateAddress(address);
     }
