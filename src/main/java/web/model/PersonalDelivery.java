@@ -4,8 +4,6 @@ package web.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "PERSONAL_DELIVERY")
@@ -27,7 +25,7 @@ public class PersonalDelivery {
 
     @OneToOne(mappedBy = "personalDelivery")
     @JsonIgnore
-    private OrderItem orderItem;
+    private Order order;
 
     public Integer getId() {
         return id;
@@ -61,11 +59,11 @@ public class PersonalDelivery {
         this.address = address;
     }
 
-    public OrderItem getOrderItem() {
-        return orderItem;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderItem(OrderItem orderItem) {
-        this.orderItem = orderItem;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

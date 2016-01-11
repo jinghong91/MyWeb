@@ -1,26 +1,26 @@
 package web.form;
 
 import web.model.Client;
-import web.model.OrderItem;
+import web.model.Order;
 import web.model.Seller;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderManagementForm {
-   private OrderItem selectedOrder=new OrderItem();
+   private Order selectedOrder=new Order();
 
     private List<Client> clientList;
 
     private List<Seller> sellerList = new ArrayList<Seller>();
 
-    private List<OrderItem> orderList=new ArrayList<OrderItem>();
+    private List<Order> orderList=new ArrayList<Order>();
 
-    public OrderItem getSelectedOrder() {
+    public Order getSelectedOrder() {
         return selectedOrder;
     }
 
-    public void setSelectedOrder(OrderItem selectedOrder) {
+    public void setSelectedOrder(Order selectedOrder) {
         this.selectedOrder = selectedOrder;
     }
 
@@ -40,11 +40,11 @@ public class OrderManagementForm {
         this.sellerList = sellerList;
     }
 
-    public List<OrderItem> getOrderList() {
+    public List<Order> getOrderList() {
         return orderList;
     }
 
-    public void setOrderList(List<OrderItem> orderList) {
+    public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
     }
 }

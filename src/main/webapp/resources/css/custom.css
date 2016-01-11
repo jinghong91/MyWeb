@@ -14,4 +14,10 @@ table.dataTable thead > tr {
     background-color:#FF709D;
 }
 
+tr.selected{
+    background-color: #46b8da !important;
+}
+
+
+
 

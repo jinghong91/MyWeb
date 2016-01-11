@@ -7,5 +7,5 @@ import java.util.List;
 public interface ICommonDeliveryDAO {
     List<CommonDelivery> getAll();
 
-    void AddCommonDelivery(CommonDelivery commonDelivery);
+    void addCommonDelivery(CommonDelivery commonDelivery);
 }

@@ -4,28 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import web.Utils.MoneyUtils;
 import web.form.CreateOrderForm;
 import web.model.Client;
-import web.model.OrderItem;
+import web.model.Order;
 import web.model.PersonalDelivery;
 import web.model.Seller;
 import web.service.IClientService;
-import web.service.IOrderItemService;
+import web.service.IOrderService;
 import web.service.impl.ISellerService;
 
 import java.util.*;
 
 @Controller
 @RequestMapping(value = "/createOrder")
-@SessionAttributes("addedOrderItemMap")
+@SessionAttributes("addedOrderMap")
 public class CreateOrdersController {
     @Autowired
-    private IOrderItemService orderItemService;
+    private IOrderService orderService;
     @Autowired
     private IClientService clientService;
     @Autowired
@@ -34,13 +33,13 @@ public class CreateOrdersController {
     private static int index = 0;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String initCreateOrder(CreateOrderForm createOrderForm, @ModelAttribute("addedOrderItemMap") Map<Integer, OrderItem> addedOrderItemMap, Model model) {
+    public String initCreateOrder(CreateOrderForm createOrderForm, @ModelAttribute("addedOrderMap") Map<Integer, Order> addedOrderMap, Model model) {
         model.addAttribute("createOrderForm", createOrderForm);
         return "createOrder";
     }
 
     @RequestMapping(value = "/add")
-    public String addOrder(CreateOrderForm createOrderForm, @ModelAttribute("addedOrderItemMap") Map<Integer, OrderItem> addedOrderItemMap, Model model) {
+    public String addOrder(CreateOrderForm createOrderForm, @ModelAttribute("addedOrderMap") Map<Integer, Order> addedOrderMap, Model model) {
         Client client;
         if (createOrderForm.isNewClient()) {
             client = new Client(createOrderForm.getNewClientName());
@@ -50,11 +49,11 @@ public class CreateOrdersController {
             client = clientService.getClientById(createOrderForm.getExistedClient());
         }
 
-        for (OrderItem orderItem : createOrderForm.getNewOrderItemList()) {
-            if ("" != orderItem.getName()) {
-                orderItem.setClient(client);
-                orderItem.setCreateDate(new Date());
-                addedOrderItemMap.put(index, orderItem);
+        for (Order order : createOrderForm.getNewOrderList()) {
+            if ("" != order.getName()) {
+                order.setClient(client);
+                order.setCreateDate(new Date());
+                addedOrderMap.put(index, order);
                 index++;
             }
         }
@@ -62,27 +61,27 @@ public class CreateOrdersController {
     }
 
     @RequestMapping(value = "/save")
-    public String save(@ModelAttribute("addedOrderItemMap") Map<Integer, OrderItem> addedOrderItemMap, SessionStatus sessionStatus) {
+    public String save(@ModelAttribute("addedOrderMap") Map<Integer, Order> addedOrderMap, SessionStatus sessionStatus) {
 
         sessionStatus.setComplete();
         index = 0;
-        for (Map.Entry<Integer, OrderItem> entry : addedOrderItemMap.entrySet()) {
-            OrderItem order = entry.getValue();
+        for (Map.Entry<Integer, Order> entry : addedOrderMap.entrySet()) {
+            Order order = entry.getValue();
             Client client = order.getClient();
             client.setConsumptionNumber(client.getConsumptionNumber() + 1);
             client.setConsumptionAmount(client.getConsumptionAmount().add(order.getSellPrice()));
             order.setPersonalDelivery(new PersonalDelivery());
-            orderItemService.addOrderItem(order);
+            orderService.addOrder(order);
 
         }
         return "redirect:/orderManagement";
     }
 
     @RequestMapping(value = "/delete")
-    public String delete(@ModelAttribute("addedOrderItemMap") Map<Integer, OrderItem> addedOrderItemMap, @RequestParam("deletedOrders") String deletedOrder, Model model) {
+    public String delete(@ModelAttribute("addedOrderMap") Map<Integer, Order> addedOrderMap, @RequestParam("deletedOrders") String deletedOrder, Model model) {
         String[] deletedOrders = deletedOrder.split(",");
         for (String key : deletedOrders) {
-            addedOrderItemMap.remove(Integer.parseInt(key));
+            addedOrderMap.remove(Integer.parseInt(key));
         }
         return "redirect:/createOrder";
     }
@@ -97,14 +96,14 @@ public class CreateOrdersController {
         return form;
     }
 
-    @ModelAttribute("addedOrderItemMap")
-    public Map<Integer, OrderItem> initAddedOrderItemList() {
-        return new HashMap<Integer, OrderItem>();
+    @ModelAttribute("addedOrderMap")
+    public Map<Integer, Order> initAddedOrderList() {
+        return new HashMap<Integer, Order>();
     }
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) throws Exception {
-        binder.registerCustomEditor(List.class, "newOrderItemList.sellerList", new CustomCollectionEditor(List.class) {
+        binder.registerCustomEditor(List.class, "newOrderList.sellerList", new CustomCollectionEditor(List.class) {
             protected Object convertElement(Object element) {
                 if (element instanceof Seller) {
                     return element;
@@ -116,4 +115,8 @@ public class CreateOrdersController {
         });
     }
 
+    @ModelAttribute("pageTitle")
+    public String  initPageTitle(){
+        return "pageTitle.createOrder";
+    }
 }

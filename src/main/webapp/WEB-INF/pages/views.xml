@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+    <definition name="login" extends="loginTemplate" >
+        <put-attribute name="body" value="/WEB-INF/pages/login.jsp"></put-attribute>
+    </definition>
+
+    <definition name="welcome" extends="defaultTemplate" />
+
+    <definition name="orderManagement" extends="defaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/orderManagement.jsp"></put-attribute>
+    </definition>
+    <definition name="createOrder" extends="defaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/createOrder.jsp"></put-attribute>
+    </definition>
+    <definition name="client" extends="defaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/client.jsp"></put-attribute>
+    </definition>
+    <definition name="createCommonDelivery" extends="defaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/createCommonDelivery.jsp"></put-attribute>
+    </definition>
+
+
+</tiles-definitions>

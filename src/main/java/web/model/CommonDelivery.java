@@ -24,16 +24,16 @@ public class CommonDelivery {
     @Column(name = "DELIVERY_FEE")
     private BigDecimal deliveryFee;
 
-    @Column(name = "TAX_REFUND")
-    private BigDecimal taxRefund;
+    @Column(name = "TAX_REFUND_RATE")
+    private BigDecimal taxRefundRate;
 
     @Column(name = "TARIFF")
     private BigDecimal tariff;
 
     @Column(name = "STATUS")
-    private String stauts;
+    private String status;
     @OneToMany(mappedBy = "commonDelivery")
-    private List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+    private List<Order> orderList = new ArrayList<Order>();
 
     public Integer getId() {
         return id;
@@ -59,12 +59,12 @@ public class CommonDelivery {
         this.deliveryFee = deliveryFee;
     }
 
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
+    public List<Order> getOrderList() {
+        return orderList;
     }
 
-    public void setOrderItemList(List<OrderItem> orderItemList) {
-        this.orderItemList = orderItemList;
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 
     public String getType() {
@@ -75,12 +75,12 @@ public class CommonDelivery {
         this.type = type;
     }
 
-    public BigDecimal getTaxRefund() {
-        return taxRefund;
+    public BigDecimal getTaxRefundRate() {
+        return taxRefundRate;
     }
 
-    public void setTaxRefund(BigDecimal taxRefund) {
-        this.taxRefund = taxRefund;
+    public void setTaxRefundRate(BigDecimal taxRefundRate) {
+        this.taxRefundRate = taxRefundRate;
     }
 
     public BigDecimal getTariff() {
@@ -91,12 +91,15 @@ public class CommonDelivery {
         this.tariff = tariff;
     }
 
-    public String getStauts() {
-        return stauts;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStauts(String stauts) {
-        this.stauts = stauts;
+    public void setStatus(String status) {
+        this.status = status;
     }
+
+
 }
+
 

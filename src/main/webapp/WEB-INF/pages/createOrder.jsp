@@ -1,20 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><spring:message code="order.title"/></title>
-    <link href="resources/css/bootstrap.css" rel="stylesheet"/>
-    <link href="resources/css/datatables.min.css" rel="stylesheet"/>
-    <link href="resources/css/custom.css" rel="stylesheet"/>
-
-    <script type="text/javascript" src="resources/js/jquery-2.1.4.js"></script>
-    <script type="text/javascript" src="resources/js/bootstrap.js"></script>
-    <script type="text/javascript" src="resources/js/datatables.min.js"></script>
 
     <script type="text/javascript" class="init">
         var error="";
@@ -44,32 +31,32 @@
             }
         }
 
-        function addOrderItem() {
+        function addOrder() {
             var id = parseInt($("#index").val()) + 1;
             $("#index").val(id);
             $("#newOrderTable tbody").append(
                     "<tr id='newOrderRow_" + id + "'>" +
-                    "<input type='hidden' name='newOrderItemList["+id+"].boughtCurrency' value='${createOrderForm.currency}'/>" +
-                    "<td><input type='text' name='newOrderItemList[" + id + "].name' id='orderName_" + id + "' class='input-sm'/></td>" +
-                    "<td><input type='text' name='newOrderItemList[" + id + "].originPriceEuro' id='orderPriceEuro_" + id + "' class='input-sm' value='0' size='7' maxlength='10'oninput='javascript:onInputPriceEuro("+id+",this)'/></td>" +
+                    "<input type='hidden' name='newOrderList["+id+"].boughtCurrency' value='${createOrderForm.currency}'/>" +
+                    "<td><input type='text' name='newOrderList[" + id + "].name' id='orderName_" + id + "' class='input-sm'/></td>" +
+                    "<td><input type='text' name='newOrderList[" + id + "].originPriceEuro' id='orderPriceEuro_" + id + "' class='input-sm' value='0' size='7' maxlength='10'oninput='javascript:onInputPriceEuro("+id+",this)'/></td>" +
                     "<td><label id='labelOrderPriceCNY_"+ id + "'' >0</label></td>" +
-                    "<td><input type='text' name='newOrderItemList[" + id + "].sellPrice' id='orderSellPrice_" + id + "' class='input-sm' value='0' size='7' maxlength='10' oninput='javascrip:onInputSellPrice("+id+",this)' /></td>" +
+                    "<td><input type='text' name='newOrderList[" + id + "].sellPrice' id='orderSellPrice_" + id + "' class='input-sm' value='0' size='7' maxlength='10' oninput='javascrip:onInputSellPrice("+id+",this)' /></td>" +
                     "<td>" +
-                        "<select name='newOrderItemList["+id+"].paymentStatus' id='orderPaymentStatus_"+id+"' class='input-sm' oninput='javascript:paymentStatusUpdate("+id+")'>" +
-                            "<option value='notPay'><spring:message code='order.select.newOrder.notPay' /></option>"+
-                            "<option value='partPaid'><spring:message code='order.select.newOrder.partPaid' /></option>"+
-                            "<option value='paid' selected='true'><spring:message code='order.select.newOrder.paid' /></option>"+
+                        "<select name='newOrderList["+id+"].paymentStatus' id='orderPaymentStatus_"+id+"' class='input-sm' oninput='javascript:paymentStatusUpdate("+id+")'>" +
+                            "<option value='notPay'><spring:message code='order.paymentStatus.notPay' /></option>"+
+                            "<option value='partPaid'><spring:message code='order.paymentStatus.partPaid' /></option>"+
+                            "<option value='paid' selected='true'><spring:message code='order.paymentStatus.paid' /></option>"+
                         "</select>"+
                     " </td>"+
-                    "<td><input type='text' name='newOrderItemList[" + id + "].paidAmount' id='orderPaidAmount_" + id + "' class='input-sm' value='0'size='7' maxlength='10'oniput='javascrip:onlyNumber(this)'></td>" +
+                    "<td><input type='text' name='newOrderList[" + id + "].paidAmount' id='orderPaidAmount_" + id + "' class='input-sm' value='0'size='7' maxlength='10'oniput='javascrip:onlyNumber(this)'></td>" +
                     "<td>" +
-                    "   <select name='newOrderItemList["+id+"].sellerList' id='orderSellerList_"+id+"' class='input-sm' multiple='true' size='2'>" +
+                    "   <select name='newOrderList["+id+"].sellerList' id='orderSellerList_"+id+"' class='input-sm' multiple='true' size='2'>" +
                     "       <c:forEach items='${createOrderForm.sellerList}' var='seller'>"   +
                     "           <option value='${seller.id}' label='${seller.name}'/>" +
                     "       </c:forEach>"   +
                     "   </select>" +
                     "</td>" +
-                    "<td><img alt='delete' src='<c:url value='/resources/image/cancel_icon.png' /> ' class='img-icon' onclick='javascript:deleteOrderItem("+id+")'/></td>" +
+                    "<td><img alt='delete' src='<c:url value='/resources/image/cancel_icon.png' /> ' class='img-icon' onclick='javascript:deleteOrder("+id+")'/></td>" +
                     "</tr>");
         }
 
@@ -81,12 +68,12 @@
             if($("#useNewClient").is(':checked')){
                 var name= newName.val();
                 if(name==""){
-                     error="<p><spring:message code="order.error.newClientEmpty"/></p>";
+                     error="<p><spring:message code="createOrder.error.newClientEmpty"/></p>";
                     newName.addClass("input-error");
                 }else{
                     $("#clientList>option").each(function(){
                       if($(this).html()==name){
-                          error="<p><spring:message code="order.error.clientExisted" /></p>";
+                          error="<p><spring:message code="createOrder.error.clientExisted" /></p>";
                           $("#newClientName").addClass("input-error");
                           return false;
                       }
@@ -94,7 +81,7 @@
                 }
             }else{
                 if(clientList.val()===0){
-                     error="<p><spring:message code="order.error.clientEmpty"/></p>";
+                     error="<p><spring:message code="createOrder.error.clientEmpty"/></p>";
                     clientList.addClass("input-error");
                 }
             }
@@ -115,29 +102,29 @@
                 sellers.removeClass("input-error");
 
                 if($.trim(orderName.val())==""){
-                    error="<p><spring:message code="order.error.orderInfoEmpty"/></p>";
+                    error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     $(orderName).addClass("input-error");
                 }
                 if(priceEuro.val()==""||priceEuro.val()==0){
-                    error="<p><spring:message code="order.error.orderInfoEmpty"/></p>";
+                    error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     priceEuro.addClass("input-error");
                 }
                 if(sellPrice.val()==""||sellPrice.val()==0){
-                    error="<p><spring:message code="order.error.orderInfoEmpty"/></p>";
+                    error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     sellPrice.addClass("input-error");
                 }
                 if(paymentStatus.val()=="partPaid"){
                     if(paidAmount.val()==""){
-                    error="<p><spring:message code="order.error.orderInfoEmpty"/></p>";
+                    error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     paidAmount.addClass("input-error");
                     }else if(paidAmount.val()==0||paidAmount.val()>=sellPrice.val()){
-                        error+="<p><spring:message code="order.error.invalidPaidAmount"/></p>";
+                        error+="<p><spring:message code="createOrder.error.invalidPaidAmount"/></p>";
                         paidAmount.addClass("input-error");
                         paymentStatus.addClass("input-error");
                     }
                 }
                 if(sellers.val()==null){
-                    error="<p><spring:message code="order.error.orderInfoEmpty"/></p>";
+                    error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     sellers.addClass("input-error");
                 }
             });
@@ -145,7 +132,7 @@
             return error;
         }
 
-        function deleteOrderItem(id) {
+        function deleteOrder(id) {
             $("#newOrderRow_"+id).hide();
             $("#orderName_"+id).val(null);
         }
@@ -228,7 +215,7 @@
             return valid;
         }
 
-        function addOrders(){
+        function createOrders(){
             $("#error").empty();
                 clientValid();
                 addOrderValid();
@@ -244,9 +231,7 @@
         }
     </script>
 
-</head>
-<body class="container">
-<jsp:include page="menu.jsp"/>
+
 <div id="error" class="text-error"></div>
 <form:form modelAttribute="createOrderForm" action="">
     <div class="panel panel-primary">
@@ -282,42 +267,42 @@
                             <th><spring:message code="order.paymentStatus"/></th>
                             <th><spring:message code="order.paidAmount"/></th>
                             <th><spring:message code="order.sellers"/></th>
-                            <th><img alt="add" src="<c:url value="/resources/image/add_icon.png" /> " class="img-icon" onclick="addOrderItem()"/></th>
+                            <th><img alt="add" src="<c:url value="/resources/image/add_icon.png" /> " class="img-icon" onclick="addOrder()"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         <input type="hidden" value="0" id="index"/>
                         <tr id="newOrderRow_0">
-                            <form:hidden path="newOrderItemList[0].boughtCurrency" value="${createOrderForm.currency}"/>
-                            <td><form:input type="text" path="newOrderItemList[0].name" id="orderName_0" class="input-sm"/></td>
-                            <td><form:input type="text" path="newOrderItemList[0].originPriceEuro" id="orderPriceEuro_0" class="input-sm numbersOnly" maxlength="10" size="7" value="0" data-rule-number="true"
+                            <form:hidden path="newOrderList[0].boughtCurrency" value="${createOrderForm.currency}"/>
+                            <td><form:input type="text" path="newOrderList[0].name" id="orderName_0" class="input-sm"/></td>
+                            <td><form:input type="text" path="newOrderList[0].originPriceEuro" id="orderPriceEuro_0" class="input-sm numbersOnly" maxlength="10" size="7" value="0" data-rule-number="true"
                                             data-rule-range="[-20,40]" oninput="javascript:onInputPriceEuro(0,this)"/></td>
                             <td><label id="labelOrderPriceCNY_0" >0</label></td>
-                            <td><form:input type="text" path="newOrderItemList[0].sellPrice" id="orderSellPrice_0" class="input-sm" maxlength="10" size="7"  value="0" oninput="javascrip:onInputSellPrice(0,this)"/></td>
+                            <td><form:input type="text" path="newOrderList[0].sellPrice" id="orderSellPrice_0" class="input-sm" maxlength="10" size="7"  value="0" oninput="javascrip:onInputSellPrice(0,this)"/></td>
                             <td>
-                                <form:select path="newOrderItemList[0].paymentStatus" id="orderPaymentStatus_0" class="input-sm" onchange="javascript:paymentStatusUpdate(0)">
-                                    <form:option value="notPay"><spring:message code="order.select.newOrder.notPay" /></form:option>
-                                    <form:option value="partPaid"><spring:message code="order.select.newOrder.partPaid" /></form:option>
-                                    <form:option value="paid" selected="true"><spring:message code="order.select.newOrder.paid" /></form:option>
+                                <form:select path="newOrderList[0].paymentStatus" id="orderPaymentStatus_0" class="input-sm" onchange="javascript:paymentStatusUpdate(0)">
+                                    <form:option value="notPay"><spring:message code="order.paymentStatus.notPay" /></form:option>
+                                    <form:option value="partPaid"><spring:message code="order.paymentStatus.partPaid" /></form:option>
+                                    <form:option value="paid" selected="true"><spring:message code="order.paymentStatus.paid" /></form:option>
                                 </form:select>
                             </td>
-                            <td><form:input type="text" path="newOrderItemList[0].paidAmount" id="orderPaidAmount_0" class="input-sm" maxlength="10" size="7" value="0" oniput='javascrip:onlyNumber(this)'/></td>
+                            <td><form:input type="text" path="newOrderList[0].paidAmount" id="orderPaidAmount_0" class="input-sm" maxlength="10" size="7" value="0" oniput='javascrip:onlyNumber(this)'/></td>
                             <td>
-                                <form:select path="newOrderItemList[0].sellerList" id="orderSellerList_0" class="input-sm"  multiple="true" size="2">
+                                <form:select path="newOrderList[0].sellerList" id="orderSellerList_0" class="input-sm"  multiple="true" size="2">
                                     <c:forEach items="${createOrderForm.sellerList}" var="seller">
                                         <option value="${seller.id}">${seller.name}</option>
                                     </c:forEach>
                                 </form:select>
                             </td>
-                            <td><img alt="delete" src="<c:url value="/resources/image/cancel_icon.png" /> " class="img-icon" onclick="deleteOrderItem(0)"/></td>
+                            <td><img alt="delete" src="<c:url value="/resources/image/cancel_icon.png" /> " class="img-icon" onclick="deleteOrder(0)"/></td>
                         </tr>
                         </tbody>
                     </table>
             </div>
-            <input type="button" class="btn btn-primary btn-sm" value="<spring:message code='global.add' />" onclick="javascript:addOrders()"/>
+            <input type="button" class="btn btn-primary btn-sm" value="<spring:message code='global.add' />" onclick="javascript:createOrders()"/>
         </div>
     </div>
-    <c:if test="${not empty addedOrderItemMap}">
+    <c:if test="${not empty addedOrderMap}">
         <div class="panel panel-primary">
             <div class="panel-body">
                 <input type="hidden" id="deletedOrders" value=""/>
@@ -367,22 +352,22 @@
                                             <col width="11%">
                                             <col width="3%">
                                         </colgroup>
-                                        <c:forEach items="${addedOrderItemMap}" var="orderItem" varStatus="loop">
-                                            <tr id="addedOrder_${orderItem.key}" class="text-center">
-                                                <td id="clientName_${orderItem.key}">${orderItem.value.client.name}</td>
-                                                <td id="orderName_${orderItem.key}">${orderItem.value.name}</td>
-                                                <td id="originPriceEuro_${orderItem.key}">${orderItem.value.originPriceEuro}</td>
-                                                <td id="originPriceCNY_${orderItem.key}">${orderItem.value.originPriceCNY}</td>
-                                                <td id="sellPrice_${orderItem.key}">${orderItem.value.sellPrice}</td>
-                                                <td id="paymentStatus_${orderItem.key}"><spring:message code="order.select.newOrder.${orderItem.value.paymentStatus}"/></td>
-                                                <td id="paidAmount_${orderItem.key}">${orderItem.value.paidAmount}</td>
-                                                <td id="sellerList_${orderItem.key}">
-                                                    <c:forEach items="${orderItem.value.sellerList}" var="seller" varStatus="loop">
+                                        <c:forEach items="${addedOrderMap}" var="order" varStatus="loop">
+                                            <tr id="addedOrder_${order.key}" class="text-center">
+                                                <td id="clientName_${order.key}">${order.value.client.name}</td>
+                                                <td id="orderName_${order.key}">${order.value.name}</td>
+                                                <td id="originPriceEuro_${order.key}">${order.value.originPriceEuro}</td>
+                                                <td id="originPriceCNY_${order.key}">${order.value.originPriceCNY}</td>
+                                                <td id="sellPrice_${order.key}">${order.value.sellPrice}</td>
+                                                <td id="paymentStatus_${order.key}"><spring:message code="order.select.newOrder.${order.value.paymentStatus}"/></td>
+                                                <td id="paidAmount_${order.key}">${order.value.paidAmount}</td>
+                                                <td id="sellerList_${order.key}">
+                                                    <c:forEach items="${order.value.sellerList}" var="seller" varStatus="loop">
                                                         ${seller.name}
                                                         <c:if test="${!loop.last}">,</c:if>
                                                     </c:forEach>
                                                 </td>
-                                                <td><img src="<c:url value="/resources/image/delete_icon.png" />" class="img-icon" alt="delete" onclick="javascript:deleteOrder(${orderItem.key})"/></td>
+                                                <td><img src="<c:url value="/resources/image/delete_icon.png" />" class="img-icon" alt="delete" onclick="javascript:deleteOrder(${order.key})"/></td>
                                             </tr>
                                         </c:forEach>
                                     </table>
@@ -439,11 +424,13 @@
                 <label><spring:message code="createOrder.message.sellPriceConfirm"/></label>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary btn-ok"  data-dismiss="modal" id="sellPriceConfirmBtn" onclick="javascript:submitForm('add')"><spring:message code="global.continue"/></button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ><spring:message code="global.cancel"/></button>
+                <button class="btn btn-primary btn-ok"  data-dismiss="modal" id="sellPriceConfirmBtn" onclick="javascript:submitForm('add')">
+                    <spring:message code="global.continue"/>
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" >
+                    <spring:message code="global.cancel"/>
+                </button>
             </div>
         </div>
     </div>
 </div>
-</body>
-</html>

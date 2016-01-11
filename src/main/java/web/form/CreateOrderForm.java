@@ -1,7 +1,7 @@
 package web.form;
 
 import web.model.Client;
-import web.model.OrderItem;
+import web.model.Order;
 import web.model.Seller;
 
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ public class CreateOrderForm {
 
     private List<Client> clientList;
 
-    private List<OrderItem> newOrderItemList = new ArrayList<OrderItem>();
+    private List<Order> newOrderList = new ArrayList<Order>();
 
     private BigDecimal currency;
 
@@ -55,12 +55,12 @@ public class CreateOrderForm {
         this.clientList = clientList;
     }
 
-    public List<OrderItem> getNewOrderItemList() {
-        return newOrderItemList;
+    public List<Order> getNewOrderList() {
+        return newOrderList;
     }
 
-    public void setNewOrderItemList(List<OrderItem> newOrderItemList) {
-        this.newOrderItemList = newOrderItemList;
+    public void setNewOrderList(List<Order> newOrderList) {
+        this.newOrderList = newOrderList;
     }
 
     public BigDecimal getCurrency() {

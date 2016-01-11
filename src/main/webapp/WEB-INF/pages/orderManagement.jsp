@@ -1,28 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><spring:message code="order.title"/></title>
-    <link href="resources/css/bootstrap.css" rel="stylesheet"/>
-    <link href="resources/css/datatables.min.css" rel="stylesheet"/>
-    <link href="resources/css/custom.css" rel="stylesheet"/>
-
-    <script type="text/javascript" src="resources/js/jquery-2.1.4.js"></script>
-    <script type="text/javascript" src="resources/js/bootstrap.js"></script>
-    <script type="text/javascript" src="resources/js/datatables.min.js"></script>
-    <script type="text/javascript" src="resources/js/jquery-ui.js"></script>
 
     <script type="text/javascript" class="init">
         $(document).ready(function () {
             $('#orderTable').DataTable();
         });
-        function  selectOrder(id){
+        function  selectOrder(row,id){
+            $("#orderTable tbody tr.selected").removeClass("selected");
+           $(row).addClass("selected");
             $.ajax({
                 type:"POST",
                 url:"<c:url value="/ajax/order/getOrder"/>?id="+id,
@@ -51,13 +39,13 @@
             var paymentStatus="";
             switch (order.paymentStatus) {
                 case 'notPay':
-                    paymentStatus="<spring:message code="order.select.newOrder.notPay" />"
+                    paymentStatus="<spring:message code="order.paymentStatus.notPay" />"
                     break;
                 case 'partPaid':
-                    paymentStatus="<spring:message code="order.select.newOrder.partPaid" />"
+                    paymentStatus="<spring:message code="order.paymentStatus.partPaid" />"
                     break;
                 case 'paid':
-                    paymentStatus="<spring:message code="order.select.newOrder.paid" />"
+                    paymentStatus="<spring:message code="order.paymentStatus.paid" />"
                     break;
             }
             $("#paymentStatusInfo  span").empty().append(paymentStatus);
@@ -74,7 +62,7 @@
             $("#deliveryTypeInfo span").empty().append(commonDelivery.type);
             $("#senDateInfo span").empty().append(commonDelivery.sendDate);
             $("#commonDeliveryFeeInfo span").empty().append(commonDelivery.deliveryFee);
-            $("#taxRefundInfo span").empty().append(commonDelivery.taxRefund);
+            $("#taxRefundInfo span").empty().append(commonDelivery.taxRefundPercentage);
             $("#tariffInfo span").empty().append(commonDelivery.tariff);
         }
 
@@ -165,20 +153,12 @@
                 paidAmount.attr("tabindex",0);
             }
         }
-
-        function onlyNumber(elem) {
-            var temp=elem.value.replace(/[^0-9\.]/g, '');
-            if (elem.value != temp) {
-                elem.value = temp;
-            }
-        }
         </script>
-</head>
-<body class="container">
-<jsp:include page="menu.jsp"/>
+
+
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <spring:message code="order.panel.orderList" />
+        <spring:message code="createOrder.panel.orderList" />
     </div>
     <div class="panel-body">
         <table id="orderTable" class="table table-hover"  width="100%">
@@ -198,7 +178,7 @@
             <tbody>
             <c:set  var="datePattern"><spring:message code='global.java.dateFormat' /></c:set>
             <c:forEach items="${orderManagementForm.orderList}" var="order" varStatus="loop">
-                <tr onclick="javascript:selectOrder(${order.id})">
+                <tr onclick="javascript:selectOrder(this,${order.id})">
                     <input type="hidden" name="orderId" value="${order.id}">
                     <td>${order.name}</td>
                     <td>${order.client.name}</td>
@@ -225,13 +205,13 @@
 </div>
 <div class="panel panel-primary" id="orderDetailsPanel" style="display: none" >
     <div class="panel-heading">
-        <spring:message code="order.panel.orderDetail" />
+        <spring:message code="createOrder.panel.orderDetail" />
     </div>
     <div class="panel-body" >
         <div class="col-lg-4"  id="divEditOrder"  style="display: none">
                 <div class="panel panel-primary" >
                     <div class="panel-heading">
-                        <spring:message code="order.panel.editOrder" />
+                        <spring:message code="createOrder.panel.editOrder" />
                         <span style="float:right">
                             <span  class="glyphicon glyphicon-ok" aria-hidden="true" onclick="javascript:submitForm('update')" data-toggle="tooltip" data-placement="left" title="<spring:message code="global.confirm"/>" ></span>
                             <span  class="glyphicon glyphicon-remove" aria-hidden="true" onclick="javascript:cancelEdit()" data-toggle="tooltip" data-placement="left" title="<spring:message code="global.cancel"/>" ></span>
@@ -265,9 +245,9 @@
                             <div  class="form-group">
                                 <label for="paymentStatus"><spring:message code="order.paymentStatus"/></label>
                                 <form:select path="selectedOrder.paymentStatus" id="paymentStatus" class="input-sm" onchange="javascript:paymentStatusUpdate()" >
-                                    <option value="notPay"><spring:message code="order.select.newOrder.notPay" /></option>
-                                    <option value="partPaid"><spring:message code="order.select.newOrder.partPaid" /></option>
-                                    <option value="paid"><spring:message code="order.select.newOrder.paid" /></option>
+                                    <option value="notPay"><spring:message code="order.paymentStatus.notPay" /></option>
+                                    <option value="partPaid"><spring:message code="order.paymentStatus.partPaid" /></option>
+                                    <option value="paid"><spring:message code="order.paymentStatus.paid" /></option>
                                 </form:select>
                             </div>
                             <div  class="form-group">
@@ -289,7 +269,7 @@
         <div class="col-lg-4" id="divOrderDetailInfo">
             <div class="panel panel-primary "  >
                 <div class="panel-heading">
-                    <spring:message code="order.panel.order"/>
+                    <spring:message code="createOrder.panel.order"/>
                     <span style="float:right" class="glyphicon glyphicon-edit" aria-hidden="true" onclick="javascript:editOrder()" data-toggle="tooltip" data-placement="left" title="<spring:message code="global.edit"/>"/>
                 </div>
                 <div class="panel-body">
@@ -328,7 +308,7 @@
         <div class="col-lg-4">
             <div class="panel panel-primary " >
                 <div class="panel-heading">
-                    <spring:message code="order.panel.commonDelivery"/>
+                    <spring:message code="createOrder.panel.commonDelivery"/>
                 </div>
                 <div class="panel-body">
                     <div  class="form-group" id="deliveryTypeInfo">
@@ -341,7 +321,7 @@
                         <label ><spring:message code="commonDelivery.deliveryFee"/> : </label><span></span>
                     </div>
                     <div  class="form-group" id="taxRefundInfo">
-                        <label ><spring:message code="commonDelivery.taxRefund"/> : </label><span></span>
+                        <label ><spring:message code="commonDelivery.taxRefundRate"/> : </label><span></span>
                     </div>
                     <div  class="form-group" id="tariffInfo">
                         <label ><spring:message code="commonDelivery.tariff"/> : </label><span></span>
@@ -352,7 +332,7 @@
         <div class="col-lg-4">
             <div class="panel panel-primary " >
                 <div class="panel-heading">
-                    <label><spring:message code="order.panel.personalDelivery"/></label>
+                    <label><spring:message code="createOrder.panel.personalDelivery"/></label>
                 </div>
                 <div class="panel-body">
                     <div  class="form-group" id="packageRefInfo">
@@ -375,5 +355,4 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+

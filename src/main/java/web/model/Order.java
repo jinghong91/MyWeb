@@ -17,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "ORDER_ITEM")
-public class OrderItem {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_ORDER_ITEM")

@@ -20,7 +20,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="padding: 2.5px 2.5px" href="#"><img alt="logo" src="resources/image/logo.gif"
+            <a class="navbar-brand" style="padding: 2.5px 2.5px" href="#"><img alt="logo" src="/resources/image/logo.gif"
                                                                                height="45px"/></a>
         </div>
 
@@ -34,8 +34,9 @@
                        aria-expanded="false">Dropdown <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <c:forEach items="${global_menuList}" var="menuItem">
-                            <li><a href="<c:url value='/${menuItem.url}' />"><spring:message
-                                    code="${menuItem.name}"/></a></li>
+                            <li>
+                                <a href="<c:url  value='/${menuItem.url}' />"><spring:message code="${menuItem.name}"/></a>
+                            </li>
                         </c:forEach>
                     </ul>
                 </li>
@@ -46,13 +47,13 @@
                 <li>
                     <div style="padding-top: 15px; padding-bottom: 15px;">
                         <c:if test="${pageContext.response.locale ne 'zh'}">
-                            <a href="?language=zh"> <img alt="zh" src="resources/image/zh_flag.gif" height="15px"/></a>
+                            <a href="?language=zh"> <img alt="zh" src="/resources/image/zh_flag.gif" height="15px"/></a>
                         </c:if>
                         <c:if test="${pageContext.response.locale ne 'en'}">
-                            <a href="?language=en"> <img alt="en" src="resources/image/en_flag.gif" height="15px"/></a>
+                            <a href="?language=en"> <img alt="en" src="/resources/image/en_flag.gif" height="15px"/></a>
                         </c:if>
                         <c:if test="${pageContext.response.locale ne 'fr'}">
-                            <a href="?language=fr"> <img alt="fr" src="resources/image/fr_flag.gif" height="15px"/></a>
+                            <a href="?language=fr"> <img alt="fr" src="/resources/image/fr_flag.gif" height="15px"/></a>
                         </c:if>
                     </div>
                 </li>
