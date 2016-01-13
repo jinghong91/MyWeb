@@ -1,5 +1,7 @@
 package web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,10 @@ public class Menu {
 
     @ManyToOne
     @JoinColumn(name = "PARENT_MENU_ID")
+    @JsonIgnore
     private Menu parentMenu;
 
-    @OneToMany(mappedBy="parentMenu")
+    @OneToMany(mappedBy = "parentMenu", fetch = FetchType.EAGER)
     private List<Menu> subMenuList = new ArrayList<Menu>();
 
     @Column(name = "ORDER")

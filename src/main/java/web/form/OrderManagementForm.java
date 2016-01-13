@@ -1,5 +1,6 @@
 package web.form;
 
+import web.Utils.PaymentStatus;
 import web.model.Client;
 import web.model.Order;
 import web.model.Seller;
@@ -15,6 +16,8 @@ public class OrderManagementForm {
     private List<Seller> sellerList = new ArrayList<Seller>();
 
     private List<Order> orderList=new ArrayList<Order>();
+
+    private   String[] paymentStatusList = PaymentStatus.getPaymentStatusList();
 
     public Order getSelectedOrder() {
         return selectedOrder;
@@ -46,5 +49,9 @@ public class OrderManagementForm {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public String[] getPaymentStatusList() {
+        return paymentStatusList;
     }
 }

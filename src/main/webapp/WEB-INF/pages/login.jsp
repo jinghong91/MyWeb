@@ -24,7 +24,7 @@
             <c:if test="${not empty msg}">
                 <label class="label-info">${msg}</label>
             </c:if>
-            <h2><spring:message code="label.login" text="Login"/></h2>
+            <h2><spring:message code="global.login" text="Login"/></h2>
             <div class="row">
                 <div class="col-xs-12">
                     <input type="text" name="username" value="" class="input-large">

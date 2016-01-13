@@ -25,21 +25,21 @@
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
             <ul class="nav navbar-nav">
-                <c:forEach items="${global_menuList}" var="menuItem">
-                    <li><a href="<c:url value='${menuItem.url}' />"><spring:message code="${menuItem.name}"/></a></li>
+                <c:forEach items="${global_menuList}" var="menuItem1">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><spring:message code="${menuItem1.name}"/> <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <c:forEach items="${menuItem1.subMenuList}" var="menuItem2">
+                                <li>
+                                    <a href="${menuItem2.url}"><spring:message code="${menuItem2.name}"/></a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </li>
                 </c:forEach>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <c:forEach items="${global_menuList}" var="menuItem">
-                            <li>
-                                <a href="<c:url  value='/${menuItem.url}' />"><spring:message code="${menuItem.name}"/></a>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a>${global_username}</a></li>

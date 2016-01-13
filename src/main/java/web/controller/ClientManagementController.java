@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import web.service.IClientService;
 
 @Controller
-public class ClientController {
+@RequestMapping(value = "/clientManagement")
+public class ClientManagementController {
     @Autowired
     private IClientService clientService;
 
-    @RequestMapping(value = "/client", method = RequestMethod.GET)
-    public String initClients(Model model) {
+    @RequestMapping()
+    public String init(Model model) {
         model.addAttribute("clientList", clientService.getAll());
-        return "client";
+        return "clientManagement";
     }
 
     @ModelAttribute("pageTitle")
     public String  initPageTitle(){
-        return "pageTitle.client";
+        return "pageTitle.clientManagement";
     }
 }

@@ -18,6 +18,14 @@ tr.selected{
     background-color: #46b8da !important;
 }
 
+.form-group{
+    padding-bottom: 10px;
+}
+
+.panel-heading {
+    padding: 0px 15px;
+}
+
 
 
 

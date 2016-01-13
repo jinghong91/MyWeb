@@ -8,6 +8,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import web.Utils.MoneyUtils;
+import web.Utils.PaymentStatus;
 import web.form.CreateOrderForm;
 import web.model.Client;
 import web.model.Order;
@@ -108,6 +109,7 @@ public class CreateOrdersController {
                 if (element instanceof Seller) {
                     return element;
                 } else if (element instanceof String) {
+
                     return sellerService.getById(Integer.valueOf(element.toString()));
                 }
                 return null;

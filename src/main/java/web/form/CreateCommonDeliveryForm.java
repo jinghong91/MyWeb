@@ -1,6 +1,9 @@
 package web.form;
 
 
+import web.Utils.CommonDeliveryStatus;
+import web.Utils.CommonDeliveryType;
+import web.Utils.PaymentStatus;
 import web.model.CommonDelivery;
 import web.model.Order;
 import web.model.Seller;
@@ -23,6 +26,12 @@ public class CreateCommonDeliveryForm {
     private int filterSellerId;
 
     private List<Seller> sellerList;
+
+    private   String[] paymentStatusList = PaymentStatus.getPaymentStatusList();
+
+    private   String[] commonDeliveryTypeList = CommonDeliveryType. getCommonDeliveryTypeList();
+
+    private String[] commonDeliveryStatusList= CommonDeliveryStatus.getCommonDeliveryStatusList();
 
     public CommonDelivery getNewCommonDelivery() {
         return newCommonDelivery;
@@ -78,5 +87,17 @@ public class CreateCommonDeliveryForm {
 
     public void setSellerList(List<Seller> sellerList) {
         this.sellerList = sellerList;
+    }
+
+    public String[] getPaymentStatusList() {
+        return paymentStatusList;
+    }
+
+    public String[] getCommonDeliveryTypeList() {
+        return commonDeliveryTypeList;
+    }
+
+    public String[] getCommonDeliveryStatusList() {
+        return commonDeliveryStatusList;
     }
 }

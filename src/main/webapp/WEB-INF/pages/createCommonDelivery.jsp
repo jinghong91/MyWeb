@@ -93,15 +93,15 @@
 <form:form modelAttribute="createCommonDeliveryForm" action="">
     <div class="panel panel-primary" id="newDeliveryPanel">
         <div class="panel-heading">
-            <label class="text-primary"><spring:message code="createCommonDelivery.panel.newDelivery"/> </label>
+           <spring:message code="createCommonDelivery.panel.newDelivery"/>
         </div>
         <div class="panel-body form-inline">
             <div class="form-group">
                 <label for="newType"><spring:message code="commonDelivery.type"/></label>
                 <form:select path="newCommonDelivery.type" id="newType" class="input-sm form-control" onchange="javascript:onChangeType()">
-                    <form:option value="shopper"><spring:message code="commonDelivery.type.shopper" /></form:option>
-                    <form:option value="guide"><spring:message code="commonDelivery.type.guide" /></form:option>
-                    <form:option value="post" ><spring:message code="commonDelivery.type.post" /></form:option>
+                    <c:forEach items="${createCommonDeliveryForm.commonDeliveryTypeList}" var="deliveryType">
+                        <form:option value="${deliveryType}"><spring:message code="commonDelivery.type.${deliveryType}" /></form:option>
+                    </c:forEach>
                 </form:select>
             </div>
             <div class="form-group">
@@ -134,9 +134,9 @@
             <div class="form-group">
                 <label for="newStatus"><spring:message code="commonDelivery.status"/></label>
                 <form:select path="newCommonDelivery.status" id="newStatus" class="input-sm form-control" >
-                    <form:option value="1">status1</form:option>
-                    <form:option value="2">status2</form:option>
-                    <form:option value="3">status3</form:option>
+                    <c:forEach items="${createCommonDeliveryForm.commonDeliveryStatusList}" var="deliveryStatus">
+                        <form:option value="${deliveryStatus}"><spring:message code="commonDelivery.stauts.${deliveryStatus}" /></form:option>
+                    </c:forEach>
                 </form:select>
             </div>
             <input type="button" class="btn btn-sm btn-primary" value="<spring:message code="global.submit"/>" onclick="javascript:createDelivery()"/>
@@ -156,9 +156,9 @@
                         <label for="filterPaymentStatus"><spring:message code="order.paymentStatus"/></label>
                         <form:select path="filterPaymentStatus" id="filterPaymentStatus" class="input-sm form-control" >
                                 <form:option value="" ><spring:message code="global.all"/></form:option>
-                                <form:option value="notPay"><spring:message code="order.paymentStatus.notPay" /></form:option>
-                                <form:option value="partPaid"><spring:message code="order.paymentStatus.partPaid" /></form:option>
-                                <form:option value="paid" ><spring:message code="order.paymentStatus.paid" /></form:option>
+                            <c:forEach items="${createCommonDeliveryForm.paymentStatusList}" var="paymentStatus">
+                                <form:option value="${paymentStatus}"><spring:message code="order.paymentStatus.${paymentStatus}" /></form:option>
+                            </c:forEach>
                         </form:select>
                     </div>
                     <div class="form-group" >

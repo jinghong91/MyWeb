@@ -6,7 +6,11 @@
 
     <script type="text/javascript" class="init">
         $(document).ready(function () {
-            $('#orderTable').DataTable();
+            $('#orderTable').DataTable({
+                "language": {
+                    "url": "/resources/locales/datatable_${pageContext.response.locale}.json"
+                }
+            });
         });
         function  selectOrder(row,id){
             $("#orderTable tbody tr.selected").removeClass("selected");
@@ -185,7 +189,7 @@
                     <td>${order.originPriceEuro}</td>
                     <td>${order.originPriceCNY}</td>
                     <td>${order.sellPrice}</td>
-                    <td><spring:message code="order.select.newOrder.${order.paymentStatus}" /></td>
+                    <td><spring:message code="order.paymentStatus.${order.paymentStatus}" /></td>
                     <td>${order.paidAmount}</td>
                     <td>
                         <c:forEach items="${order.sellerList}" var="seller" varStatus="loop">
@@ -245,9 +249,9 @@
                             <div  class="form-group">
                                 <label for="paymentStatus"><spring:message code="order.paymentStatus"/></label>
                                 <form:select path="selectedOrder.paymentStatus" id="paymentStatus" class="input-sm" onchange="javascript:paymentStatusUpdate()" >
-                                    <option value="notPay"><spring:message code="order.paymentStatus.notPay" /></option>
-                                    <option value="partPaid"><spring:message code="order.paymentStatus.partPaid" /></option>
-                                    <option value="paid"><spring:message code="order.paymentStatus.paid" /></option>
+                                    <c:forEach items="${orderManagementForm.paymentStatusList}" var="paymentStatus">
+                                        <form:option value="${paymentStatus}"><spring:message code="order.paymentStatus.${paymentStatus}" /></form:option>
+                                    </c:forEach>
                                 </form:select>
                             </div>
                             <div  class="form-group">

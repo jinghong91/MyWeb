@@ -1,5 +1,6 @@
 package web.form;
 
+import web.Utils.PaymentStatus;
 import web.model.Client;
 import web.model.Order;
 import web.model.Seller;
@@ -22,6 +23,8 @@ public class CreateOrderForm {
     private BigDecimal currency;
 
     private List<Seller> sellerList = new ArrayList<Seller>();
+
+    private   String[] paymentStatusList =PaymentStatus.getPaymentStatusList();
 
     public boolean isNewClient() {
         return newClient;
@@ -79,4 +82,7 @@ public class CreateOrderForm {
         this.sellerList = sellerList;
     }
 
+    public String[] getPaymentStatusList() {
+        return paymentStatusList;
+    }
 }

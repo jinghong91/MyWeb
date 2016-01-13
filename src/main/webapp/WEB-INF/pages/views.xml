@@ -15,8 +15,8 @@
     <definition name="createOrder" extends="defaultTemplate">
         <put-attribute name="body" value="/WEB-INF/pages/createOrder.jsp"></put-attribute>
     </definition>
-    <definition name="client" extends="defaultTemplate">
-        <put-attribute name="body" value="/WEB-INF/pages/client.jsp"></put-attribute>
+    <definition name="clientManagement" extends="defaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/clientManagement.jsp"></put-attribute>
     </definition>
     <definition name="createCommonDelivery" extends="defaultTemplate">
         <put-attribute name="body" value="/WEB-INF/pages/createCommonDelivery.jsp"></put-attribute>

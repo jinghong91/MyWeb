@@ -4,7 +4,11 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            $("#clientTable").dataTable();
+            $("#clientTable").dataTable({
+                "language": {
+                    "url": "/resources/locales/datatable_${pageContext.response.locale}.json"
+                }
+            });
         });
 
         function rowClick(row){
@@ -30,8 +34,8 @@
                                 "<td id='tdReceiver_"+address.id+"'>" + address.receiver + "</td>" +
                                 "<td id='tdAddress_"+address.id+"'>" + address.address + "</td>" +
                                 "<td id='tdPhone_"+address.id+"'>" + address.phoneNumber + "</td>" +
-                                "<td><img src='<c:url value='/resources/image/delete_icon.png' />' class='img-icon' alt='delete' onclick='javascript:deleteAddress("+address.id+")'/></td>" +
                                 "<td><img src=' <c:url value='/resources/image/edit_icon.png' /> ' class='img-icon' alt='edit' onclick='javascript:editAddress("+address.id+")'/></td>" +
+                                "<td><img src='<c:url value='/resources/image/delete_icon.png' />' class='img-icon' alt='delete' onclick='javascript:deleteAddress("+address.id+")'/></td>" +
                                 "</tr>")
                         //for data edit
                         $('#addressTable tbody').prepend(
@@ -128,7 +132,9 @@
     </script>
 
 <div class="panel panel-primary">
-    <div class="panel-heading"></div>
+    <div class="panel-heading">
+        <spring:message code="clientMangement.panel.clientList"/>
+    </div>
     <div class="panel-body">
         <table class="table" id="clientTable" >
             <thead>

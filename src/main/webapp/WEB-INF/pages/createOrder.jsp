@@ -6,7 +6,11 @@
     <script type="text/javascript" class="init">
         var error="";
         $(document).ready(function () {
-            $('#orderTable').DataTable();
+            $('#orderTable').DataTable({
+                "language": {
+                    "url": "/resources/locales/datatable_${pageContext.response.locale}.json"
+                }
+            });
             var totalPriceEuro=0;
             var totalPriceCNY=0;
             var totalSellPrice=0;
@@ -43,10 +47,10 @@
                     "<td><input type='text' name='newOrderList[" + id + "].sellPrice' id='orderSellPrice_" + id + "' class='input-sm' value='0' size='7' maxlength='10' oninput='javascrip:onInputSellPrice("+id+",this)' /></td>" +
                     "<td>" +
                         "<select name='newOrderList["+id+"].paymentStatus' id='orderPaymentStatus_"+id+"' class='input-sm' oninput='javascript:paymentStatusUpdate("+id+")'>" +
-                            "<option value='notPay'><spring:message code='order.paymentStatus.notPay' /></option>"+
-                            "<option value='partPaid'><spring:message code='order.paymentStatus.partPaid' /></option>"+
-                            "<option value='paid' selected='true'><spring:message code='order.paymentStatus.paid' /></option>"+
-                        "</select>"+
+                    "       <c:forEach items='${createOrderForm.paymentStatusList}' var='paymentStatus'>   "+
+                    "           <option value='${paymentStatus}'><spring:message code='order.paymentStatus.${paymentStatus}' /></option>"+
+                    "       </c:forEach>"+
+                    "   </select>"+
                     " </td>"+
                     "<td><input type='text' name='newOrderList[" + id + "].paidAmount' id='orderPaidAmount_" + id + "' class='input-sm' value='0'size='7' maxlength='10'oniput='javascrip:onlyNumber(this)'></td>" +
                     "<td>" +
@@ -236,7 +240,7 @@
 <form:form modelAttribute="createOrderForm" action="">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <label class="text-primary"><spring:message code="order.label.newOrder"/> </label>
+           <spring:message code="order.label.newOrder"/>
         </div>
         <div class="panel-body">
             <div class="form-inline">
@@ -281,9 +285,9 @@
                             <td><form:input type="text" path="newOrderList[0].sellPrice" id="orderSellPrice_0" class="input-sm" maxlength="10" size="7"  value="0" oninput="javascrip:onInputSellPrice(0,this)"/></td>
                             <td>
                                 <form:select path="newOrderList[0].paymentStatus" id="orderPaymentStatus_0" class="input-sm" onchange="javascript:paymentStatusUpdate(0)">
-                                    <form:option value="notPay"><spring:message code="order.paymentStatus.notPay" /></form:option>
-                                    <form:option value="partPaid"><spring:message code="order.paymentStatus.partPaid" /></form:option>
-                                    <form:option value="paid" selected="true"><spring:message code="order.paymentStatus.paid" /></form:option>
+                                    <c:forEach items="${createOrderForm.paymentStatusList}" var="paymentStatus">
+                                        <form:option value="${paymentStatus}"><spring:message code="order.paymentStatus.${paymentStatus}" /></form:option>
+                                    </c:forEach>
                                 </form:select>
                             </td>
                             <td><form:input type="text" path="newOrderList[0].paidAmount" id="orderPaidAmount_0" class="input-sm" maxlength="10" size="7" value="0" oniput='javascrip:onlyNumber(this)'/></td>
