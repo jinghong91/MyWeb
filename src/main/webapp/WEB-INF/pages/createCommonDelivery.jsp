@@ -28,30 +28,37 @@
         }
 
         function createDelivery(){
+            var taxRefund=$("#newTaxRefund").val();
+            var tariff=$("#newTariff").val();
             var error="";
             $("#error").empty();
-            if(  $("#newTaxRefund").val()>100){
+            if( !taxRefund>100){
                 $("#newTaxRefund").addClass("input-error");
                 <spring:message code="commonDelivery.taxRefundRate" var="labeLTaxRefundRate"/>
              error+= "<p><spring:message code="global.error.invalid" arguments="${labeLTaxRefundRate}"/></p>";
             }
-            if(!$.isNumeric($("#newTariff").val())){
+            if(!tariff>100){
                 $("#newTariff").addClass("input-error");
-                <spring:message code="commonDelivery.tariff" var="labelTariff"/>
+                <spring:message code="commonDelivery.tariffRate" var="labelTariff"/>
                 error+= "<p><spring:message code="global.error.invalid" arguments="${labelTariff}"/></p>";
             }if(!$.isNumeric($("#newDeliveryFee").val())){
                 $("#newDeliveryFee").addClass("input-error");
-                <spring:message code="commonDelivery.taxRefundRate" var="labelDeliveryFee"/>
+                <spring:message code="commonDelivery.deliveryFee" var="labelDeliveryFee"/>
                 error+= "<p><spring:message code="global.error.invalid" arguments="${labelDeliveryFee}"/></p>";
             }
+           var trSelectedOrders=$("#orderTable tbody tr.selected");
+            if($(trSelectedOrders).length==0){
+                error+= "<p><spring:message code="createCommonDelivery.error.emptyOrder" /></p>";
 
+            }
             if(error==""){
             var selectedOrders=""
-            $("#orderTable tbody tr.selected").each(function(){
-                selectedOrders+="_"+$(this).find("[id^=orderId]").val();
+            $.each(trSelectedOrders,function(index,selectedOrder){
+                selectedOrders+="_"+$(selectedOrder).find("[id^=orderId]").val();
             });
-
-            submitForm("create?selectedOrders="+selectedOrders);
+                $("#newTaxRefund").val(taxRefund/100);
+                $("#newTariff").val(tariff/100);
+                submitForm("create?selectedOrders="+selectedOrders);
             }else{
                 $("#error").append(error);
             }
@@ -84,8 +91,31 @@
         }
 
         function onChangeType(){
-            if($("#newType").val()=="shopper"){
-                $("#newTaxRefund").val("16.667");
+           var newTaxRefund= $("#newTaxRefund");
+            var newTariff=$("#newTariff");
+            var newDeliveryFee=$("#newDeliveryFee");
+            var newType=$("#newType").val();
+            switch(newType){
+                case "shopper":
+                    newTaxRefund.val("16.667").prop("readonly",true).attr("tabindex","-1");
+                    newTariff.val("2").prop("readonly",true).attr("tabindex","-1");
+                    newDeliveryFee.prop("readonly",false).attr("tabindex","");
+                    break;
+                case "guide":
+                    newTaxRefund.prop("readonly",false).attr("tabindex","");
+                    newTariff.val("0").prop("readonly",true).attr("tabindex","-1");
+                    newDeliveryFee.val("0").prop("readonly",true).attr("tabindex","-1");
+                    break;
+                case "post":
+                    newTaxRefund.val("0").prop("readonly",true).attr("tabindex","-1");
+                    newTariff.prop("readonly",false).attr("tabindex","");
+                    newDeliveryFee.prop("readonly",false).attr("tabindex","");
+                    break;
+                case "other":
+                    newTaxRefund.prop("readonly",false).attr("tabindex","");
+                    newTariff.prop("readonly",false).attr("tabindex","");
+                    newDeliveryFee.prop("readonly",false).attr("tabindex","");
+                    break;
             }
         }
     </script>
@@ -99,8 +129,8 @@
             <div class="form-group">
                 <label for="newType"><spring:message code="commonDelivery.type"/></label>
                 <form:select path="newCommonDelivery.type" id="newType" class="input-sm form-control" onchange="javascript:onChangeType()">
-                    <c:forEach items="${createCommonDeliveryForm.commonDeliveryTypeList}" var="deliveryType">
-                        <form:option value="${deliveryType}"><spring:message code="commonDelivery.type.${deliveryType}" /></form:option>
+                    <c:forEach items="${createCommonDeliveryForm.commonDeliveryTypeSet}" var="deliveryType">
+                        <form:option value="${deliveryType}"><spring:message code="commonDelivery.type.${deliveryType.value}" /></form:option>
                     </c:forEach>
                 </form:select>
             </div>
@@ -113,29 +143,29 @@
             <div class="form-group">
                 <label for="newDeliveryFee"><spring:message code="commonDelivery.deliveryFee"/></label>
                 <div class="input-group">
-                <form:input type="text" path="newCommonDelivery.deliveryFee" class="form-control input-sm" id="newDeliveryFee"  oninput="javascript:onlyNumber(this)" size="6"  aria-describedby="newDeliveryFeeAddon"/>
+                <form:input type="text" path="newCommonDelivery.deliveryFee" class="form-control input-sm" id="newDeliveryFee"  oninput="javascript:onlyNumber(this)" size="6"  aria-describedby="newDeliveryFeeAddon" value="0"/>
                     <span class="input-group-addon" id="newDeliveryFeeAddon">&yen;</span>
                 </div>
                 </div>
             <div class="form-group">
                 <label for="newTaxRefund"><spring:message code="commonDelivery.taxRefundRate"/></label>
                 <div class="input-group">
-                <form:input type="text" path="newCommonDelivery.taxRefundRate" class="form-control input-sm"  id="newTaxRefund" size="4" maxlength="6" oninput="javascript:onlyNumber(this)" aria-describedby="newTaxRefundAddon" value="16.667" />
+                <form:input type="text" path="newCommonDelivery.taxRefundRate" class="form-control input-sm"  id="newTaxRefund" size="4" maxlength="6" oninput="javascript:onlyNumber(this)" aria-describedby="newTaxRefundAddon" readonly="true" tabindex="-1" value="16.667" />
                 <span class="input-group-addon" id="newTaxRefundAddon">%</span>
             </div>
             </div>
             <div class="form-group">
-                <label for="newTariff"><spring:message code="commonDelivery.tariff"/></label>
+                <label for="newTariff"><spring:message code="commonDelivery.tariffRate"/></label>
                 <div class="input-group">
-                    <form:input type="text" path="newCommonDelivery.tariff" class="form-control input-sm"  id="newTariff" size="6" oninput="javascript:onlyNumber(this)" aria-describedby="newTariffAddon"/>
-                    <span class="input-group-addon" id="newTariffAddon">&yen;</span>
+                    <form:input type="text" path="newCommonDelivery.tariffRate" class="form-control input-sm"  id="newTariff" size="1" oninput="javascript:onlyNumber(this)" aria-describedby="newTariffAddon" readonly="true" tabindex="-1" value="2"/>
+                    <span class="input-group-addon" id="newTariffAddon">%</span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="newStatus"><spring:message code="commonDelivery.status"/></label>
                 <form:select path="newCommonDelivery.status" id="newStatus" class="input-sm form-control" >
-                    <c:forEach items="${createCommonDeliveryForm.commonDeliveryStatusList}" var="deliveryStatus">
-                        <form:option value="${deliveryStatus}"><spring:message code="commonDelivery.stauts.${deliveryStatus}" /></form:option>
+                    <c:forEach items="${createCommonDeliveryForm.commonDeliveryStatusSet}" var="deliveryStatus">
+                        <form:option value="${deliveryStatus}"><spring:message code="commonDelivery.stauts.${deliveryStatus.value}" /></form:option>
                     </c:forEach>
                 </form:select>
             </div>

@@ -51,7 +51,7 @@ public class CreateOrdersController {
         }
 
         for (Order order : createOrderForm.getNewOrderList()) {
-            if ("" != order.getName()) {
+            if (order.getName()!=null&&!order.getName().equals("")) {
                 order.setClient(client);
                 order.setCreateDate(new Date());
                 addedOrderMap.put(index, order);

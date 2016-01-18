@@ -10,12 +10,13 @@ import web.model.Seller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 
 public class CreateCommonDeliveryForm {
     private CommonDelivery newCommonDelivery;
 
-    private List<Order>  availableOrderList=new ArrayList<Order>();
+    private List<Order> availableOrderList = new ArrayList<Order>();
 
     private String filterPaymentStatus;
 
@@ -27,11 +28,11 @@ public class CreateCommonDeliveryForm {
 
     private List<Seller> sellerList;
 
-    private   String[] paymentStatusList = PaymentStatus.getPaymentStatusList();
+    private String[] paymentStatusList = PaymentStatus.getPaymentStatusList();
 
-    private   String[] commonDeliveryTypeList = CommonDeliveryType. getCommonDeliveryTypeList();
+    private EnumSet<CommonDeliveryType> commonDeliveryTypeSet =EnumSet.allOf(CommonDeliveryType.class);
 
-    private String[] commonDeliveryStatusList= CommonDeliveryStatus.getCommonDeliveryStatusList();
+    private EnumSet<CommonDeliveryStatus> commonDeliveryStatusSet = EnumSet.allOf(CommonDeliveryStatus.class);
 
     public CommonDelivery getNewCommonDelivery() {
         return newCommonDelivery;
@@ -93,11 +94,11 @@ public class CreateCommonDeliveryForm {
         return paymentStatusList;
     }
 
-    public String[] getCommonDeliveryTypeList() {
-        return commonDeliveryTypeList;
+    public EnumSet<CommonDeliveryType> getCommonDeliveryTypeSet() {
+        return commonDeliveryTypeSet;
     }
 
-    public String[] getCommonDeliveryStatusList() {
-        return commonDeliveryStatusList;
+    public EnumSet<CommonDeliveryStatus> getCommonDeliveryStatusSet() {
+        return commonDeliveryStatusSet;
     }
 }

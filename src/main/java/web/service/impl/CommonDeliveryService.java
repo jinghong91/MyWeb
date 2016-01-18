@@ -22,6 +22,6 @@ public class CommonDeliveryService implements ICommonDeliveryService {
 
     @Override
     public void addCommonDelivery(CommonDelivery commonDelivery) {
-commonDeliveryDAO.addCommonDelivery(commonDelivery);
+        commonDeliveryDAO.addCommonDelivery(commonDelivery);
     }
 }

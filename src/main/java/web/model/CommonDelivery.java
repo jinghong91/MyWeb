@@ -1,7 +1,15 @@
 package web.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
+import web.Utils.CommonDeliveryStatus;
+import web.Utils.CommonDeliveryType;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,12 +35,15 @@ public class CommonDelivery {
     @Column(name = "TAX_REFUND_RATE")
     private BigDecimal taxRefundRate;
 
-    @Column(name = "TARIFF")
-    private BigDecimal tariff;
+    @Column(name = "TARIFF_RATE")
+    private BigDecimal tariffRate;
 
     @Column(name = "STATUS")
     private String status;
+
     @OneToMany(mappedBy = "commonDelivery")
+    @Cascade({CascadeType.SAVE_UPDATE,CascadeType.MERGE})
+    @JsonIgnore
     private List<Order> orderList = new ArrayList<Order>();
 
     public Integer getId() {
@@ -67,13 +78,7 @@ public class CommonDelivery {
         this.orderList = orderList;
     }
 
-    public String getType() {
-        return type;
-    }
 
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public BigDecimal getTaxRefundRate() {
         return taxRefundRate;
@@ -83,12 +88,20 @@ public class CommonDelivery {
         this.taxRefundRate = taxRefundRate;
     }
 
-    public BigDecimal getTariff() {
-        return tariff;
+    public BigDecimal getTariffRate() {
+        return tariffRate;
     }
 
-    public void setTariff(BigDecimal tariff) {
-        this.tariff = tariff;
+    public void setTariffRate(BigDecimal tariffRate) {
+        this.tariffRate = tariffRate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getStatus() {
@@ -98,8 +111,6 @@ public class CommonDelivery {
     public void setStatus(String status) {
         this.status = status;
     }
-
-
 }
 
 

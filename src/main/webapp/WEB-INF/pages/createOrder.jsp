@@ -60,7 +60,7 @@
                     "       </c:forEach>"   +
                     "   </select>" +
                     "</td>" +
-                    "<td><img alt='delete' src='<c:url value='/resources/image/cancel_icon.png' /> ' class='img-icon' onclick='javascript:deleteOrder("+id+")'/></td>" +
+                    "<td><img alt='delete' src='<c:url value='/resources/image/cancel_icon.png' /> ' class='img-icon' onclick='javascript:deleteTempOrder("+id+")'/></td>" +
                     "</tr>");
         }
 
@@ -113,7 +113,7 @@
                     error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     priceEuro.addClass("input-error");
                 }
-                if(sellPrice.val()==""||sellPrice.val()==0){
+                if(!$.isNumeric(sellPrice.val())){
                     error="<p><spring:message code="createOrder.error.orderInfoEmpty"/></p>";
                     sellPrice.addClass("input-error");
                 }
@@ -136,7 +136,7 @@
             return error;
         }
 
-        function deleteOrder(id) {
+        function deleteTempOrder(id) {
             $("#newOrderRow_"+id).hide();
             $("#orderName_"+id).val(null);
         }
@@ -191,7 +191,6 @@
         function submitForm(method){
             var formAction ="<c:url value="/createOrder"/>" +"/"+method;
             $("#createOrderForm").attr("action",  formAction);
-            console.log( $("#createOrderForm").attr("action"));
             $("#createOrderForm").submit();
         }
 
@@ -221,6 +220,7 @@
 
         function createOrders(){
             $("#error").empty();
+            error="";
                 clientValid();
                 addOrderValid();
                 if(error==""){
@@ -298,7 +298,7 @@
                                     </c:forEach>
                                 </form:select>
                             </td>
-                            <td><img alt="delete" src="<c:url value="/resources/image/cancel_icon.png" /> " class="img-icon" onclick="deleteOrder(0)"/></td>
+                            <td><img alt="delete" src="<c:url value="/resources/image/cancel_icon.png" /> " class="img-icon" onclick="deleteTempOrder(0)"/></td>
                         </tr>
                         </tbody>
                     </table>
@@ -331,10 +331,10 @@
                                         <th class="text-center"><spring:message code="order.name"/></th>
                                         <th class="text-center"><spring:message code="order.priceEuro"/></th>
                                         <th class="text-center"><spring:message code="order.priceCNY"/></th>
-                                        <th class="text-center"><spring:message code="order.sellers"/></th>
+                                        <th class="text-center"><spring:message code="order.sellPrice"/></th>
                                         <th class="text-center"><spring:message code="order.paymentStatus"/></th>
                                         <th class="text-center"><spring:message code="order.paidAmount"/></th>
-                                        <th class="text-center"><spring:message code="order.sellPrice"/></th>
+                                        <th class="text-center"><spring:message code="order.sellers"/></th>
                                         <th class="text-center"></th>
                                     </tr>
                                 </table>
@@ -363,7 +363,7 @@
                                                 <td id="originPriceEuro_${order.key}">${order.value.originPriceEuro}</td>
                                                 <td id="originPriceCNY_${order.key}">${order.value.originPriceCNY}</td>
                                                 <td id="sellPrice_${order.key}">${order.value.sellPrice}</td>
-                                                <td id="paymentStatus_${order.key}"><spring:message code="order.select.newOrder.${order.value.paymentStatus}"/></td>
+                                                <td id="paymentStatus_${order.key}"><spring:message code="order.paymentStatus.${order.value.paymentStatus}"/></td>
                                                 <td id="paidAmount_${order.key}">${order.value.paidAmount}</td>
                                                 <td id="sellerList_${order.key}">
                                                     <c:forEach items="${order.value.sellerList}" var="seller" varStatus="loop">

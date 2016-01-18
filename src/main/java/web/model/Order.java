@@ -1,6 +1,7 @@
 package web.model;
 
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -47,11 +48,11 @@ public class Order {
     @Column(name = "REMARK")
     private String remark;
 
-    @Column(name = "DELIVERY_TYPE")
-    private int deliveryType;
-
     @Column(name = "CREATE_DATE")
     private Date createDate;
+
+    @Column(name="PROFIT")
+    private BigDecimal profit;
 
     @ManyToOne
     @JoinColumn(name = "ADDRESS_ID")
@@ -67,7 +68,7 @@ public class Order {
     private PersonalDelivery personalDelivery;
 
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
@@ -80,10 +81,6 @@ public class Order {
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -183,14 +180,6 @@ public class Order {
         this.boughtCurrency = boughtCurrency;
     }
 
-    public int getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(int deliveryType) {
-        this.deliveryType = deliveryType;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -207,39 +196,16 @@ public class Order {
         this.sellerList = sellerList;
     }
 
-    public void addSeller(Seller seller){
-        if(!this.sellerList.contains(seller)){
-            this.sellerList.add(seller);
-        }
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
     }
 
     public BigDecimal getOriginPriceCNY() {
         return this.originPriceEuro.multiply(this.boughtCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
     }
-
-
-    /*  public BigDecimal getTotalProfit() {
-        if (this.status >= 4) {
-            BigDecimal fee = new BigDecimal(0);
-            switch (this.deliveryType) {
-                case 1:
-                    this.commonDelivery.getDeliveryFee().add();
-            }
-
-            (this.sellPrice.
-                    subtract(this.originPriceCNY).
-                    subtract(this.commonDelivery.getDeliveryFee())).
-                    divide(isSellWithYu() ? new BigDecimal(2) : new BigDecimal(1));
-        } else {
-            return new BigDecimal(0);
-        }
-    }
-
-    public BigDecimal getImportFee() {
-        if (this.deliveryType == 1) {
-            return this.getOriginPriceCNY().multiply(new BigDecimal(0.02));
-        }
-        return new BigDecimal(0);
-    }*/
 
 }

@@ -21,6 +21,9 @@
     <definition name="createCommonDelivery" extends="defaultTemplate">
         <put-attribute name="body" value="/WEB-INF/pages/createCommonDelivery.jsp"></put-attribute>
     </definition>
+    <definition name="dashboard" extends="defaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/dashboard.jsp"></put-attribute>
+    </definition>
 
 
 </tiles-definitions>

@@ -1,12 +1,10 @@
 package web.Utils;
 
-/**
- * Created by Administrator on 2016/1/12.
- */
 public enum CommonDeliveryStatus {
     DELIVERING("delivering"), COMPLETE("complete");
+
     private String value;
-    private static final String[] commonDeliveryStatusList = {DELIVERING.value, COMPLETE.value};
+    private static final CommonDeliveryStatus[] commonDeliveryStatusList = {DELIVERING, COMPLETE};
 
     private CommonDeliveryStatus(String value) {
         this.value = value;
@@ -14,11 +12,20 @@ public enum CommonDeliveryStatus {
 
     @Override
     public String toString() {
+        return this.value;
+    }
+
+    public String getValue(){
         return value;
     }
 
-    public static String[] getCommonDeliveryStatusList() {
+    public static CommonDeliveryStatus[] getCommonDeliveryStatusList() {
         return commonDeliveryStatusList;
     }
 
+    public static CommonDeliveryStatus getEnum(String value) {
+        for(CommonDeliveryStatus v : values())
+            if(v.getValue().equalsIgnoreCase(value)) return v;
+        throw new IllegalArgumentException();
+    }
 }

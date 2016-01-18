@@ -59,18 +59,15 @@ public class OrderDAO extends AbstractDAO<Order> implements IOrderDAO {
     }
 
     @Override
-    public List<Order> getOrderWithoutCommonDeliveryWithFilter(String paymentStatus, Date createDateFrom, Date createDateTo, int sellerId) {
+    public List<Order> getOrderWithoutCommonDeliveryWithFilter(String paymentStatus, Date createDateFrom, Date createDateTo, int sellerId, int clientId) {
         Criteria crit = createEntityCriteria()
                 .createAlias("client", "client")
                 .createAlias("sellerList", "seller")
                 .createAlias("commonDelivery", "commonDelivery", JoinType.LEFT_OUTER_JOIN)
                 .add(Restrictions.isNull("commonDelivery"))
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (paymentStatus!= null) {
+        if (paymentStatus != null) {
             crit.add(Restrictions.eq("paymentStatus", paymentStatus));
-        }
-        if (sellerId != 0) {
-            crit.add(Restrictions.eq("seller.id", sellerId));
         }
         if (createDateFrom != null) {
             crit.add(Restrictions.ge("createDate", createDateFrom));
@@ -78,6 +75,23 @@ public class OrderDAO extends AbstractDAO<Order> implements IOrderDAO {
         if (createDateTo != null) {
             crit.add(Restrictions.le("createDate", createDateTo));
         }
+        if (sellerId != 0) {
+            crit.add(Restrictions.eq("seller.id", sellerId));
+        }
+        if (clientId != 0) {
+            crit.add(Restrictions.eq("client.id", clientId));
+        }
         return crit.list();
+    }
+
+    @Override
+    public List<Order> getOrderWithCommonDeliverySortByCreateDate() {
+        return createEntityCriteria()
+                .createAlias("client", "client")
+                .createAlias("commonDelivery", "commonDelivery", JoinType.INNER_JOIN)
+                .addOrder(org.hibernate.criterion.Order.asc("createDate"))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .list();
+
     }
 }

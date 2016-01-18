@@ -3,6 +3,7 @@ package web.controller;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,6 +16,8 @@ import web.service.IClientService;
 import web.service.IOrderService;
 import web.service.impl.ISellerService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -64,6 +67,19 @@ public class OrderManagementController {
         return "redirect:/orderManagement";
     }
 
+    @RequestMapping("filter")
+    public String filter(OrderManagementForm form, Model model){
+        form.setOrderList(orderService.getOrderWithoutCommonDeliveryWithFilter(
+                form.getFilterPaymentStatus(),
+                form.getFilterCreateDateFrom(),
+                form.getFilterCreateDateTo(),
+                form.getFilterSellerId(),
+                form.getFilterClientId()
+        ));
+
+        return "orderManagement";
+    }
+
     @ModelAttribute(value = "orderManagementForm")
     public OrderManagementForm initAddOrderForm() {
         OrderManagementForm form = new OrderManagementForm();
@@ -92,6 +108,8 @@ public class OrderManagementController {
             }
         });
     }
+
+
 
 }
 

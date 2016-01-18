@@ -41,6 +41,10 @@ public abstract class AbstractDAO<T> {
         getSession().update(entity);
     }
 
+    protected void merge(T entity) {
+        getSession().merge(entity);
+    }
+
     protected void saveOrUpdate(T entity){
         getSession().saveOrUpdate(entity);
     }

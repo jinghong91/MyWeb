@@ -3,13 +3,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-
-    <script type="text/javascript" class="init">
+<script type="text/javascript" class="init">
         $(document).ready(function () {
             $('#orderTable').DataTable({
                 "language": {
                     "url": "/resources/locales/datatable_${pageContext.response.locale}.json"
                 }
+            });
+
+            $('#filterCreateDate').datepicker({
+                format: "<spring:message code="global.datepicker.dateFormat"/>",
+                todayBtn: "linked",
+                language: "${pageContext.response.locale}",
+                todayHighlight: true,
+                calendarWeeks: true,
             });
         });
         function  selectOrder(row,id){
@@ -23,9 +30,9 @@
                     cancelEdit();
                     refreshDetailPanel(data);
                     refreshOrderDetailInfo(data);
-                    if(data.commonDelivery!=null) {
+                   
                         refreshCommonDeliveryInfo(data.commonDelivery);
-                    }
+                    
                         refreshPersonalDeliveryInfo
 
                     $("#orderDetailsPanel").show();
@@ -63,11 +70,18 @@
         }
 
         function refreshCommonDeliveryInfo(commonDelivery){
-            $("#deliveryTypeInfo span").empty().append(commonDelivery.type);
-            $("#senDateInfo span").empty().append(commonDelivery.sendDate);
-            $("#commonDeliveryFeeInfo span").empty().append(commonDelivery.deliveryFee);
-            $("#taxRefundInfo span").empty().append(commonDelivery.taxRefundPercentage);
-            $("#tariffInfo span").empty().append(commonDelivery.tariff);
+            $("#deliveryTypeInfo span").empty();
+            $("#senDateInfo span").empty();
+            $("#commonDeliveryFeeInfo span").empty();
+            $("#taxRefundInfo span").empty();
+            $("#tariffInfo span").empty();
+            if(commonDelivery!=null){
+                $("#deliveryTypeInfo span").append(commonDelivery.type);
+                $("#senDateInfo span").append(commonDelivery.sendDate);
+                $("#commonDeliveryFeeInfo span").append(commonDelivery.deliveryFee);
+                $("#taxRefundInfo span").append(commonDelivery.taxRefundPercentage);
+                $("#tariffInfo span").append(commonDelivery.tariffRate);
+            }
         }
 
         function refreshPersonalDeliveryInfo(personDelivery){
@@ -157,14 +171,68 @@
                 paidAmount.attr("tabindex",0);
             }
         }
+
+
+        function resetFilters(){
+            $("#filterClient").val("");
+            $("#filterPaymentStatus").val("");
+            $("#filterCreateDateFrom").val("");
+            $("#filterCreateDateTo").val("");
+            $("#filterSeller").val("0");
+        }
         </script>
 
-
+<form:form modelAttribute="orderManagementForm" id="orderManagementForm">
 <div class="panel panel-primary">
     <div class="panel-heading">
         <spring:message code="createOrder.panel.orderList" />
     </div>
     <div class="panel-body">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <spring:message code="global.filter"/>
+            </div>
+            <div class="panel-body form-inline">
+                <div class="form-group">
+                    <label for="filterClient"><spring:message code="order.client"/></label>
+                    <form:select path="filterClientId" id="filterClient" cssClass="input-sm form-control" >
+                        <form:option value="0" ><spring:message code="global.all"/></form:option>
+                        <form:options items="${orderManagementForm.clientList}"  itemValue="id" itemLabel="name" />
+                    </form:select>
+                </div>
+                <div class="form-group">
+                    <label for="filterPaymentStatus"><spring:message code="order.paymentStatus"/></label>
+                    <form:select path="filterPaymentStatus" id="filterPaymentStatus" cssClass="input-sm form-control" >
+                        <form:option value="" ><spring:message code="global.all"/></form:option>
+                        <c:forEach items="${orderManagementForm.paymentStatusList}" var="paymentStatus">
+                            <form:option value="${paymentStatus}"><spring:message code="order.paymentStatus.${paymentStatus}" /></form:option>
+                        </c:forEach>
+                    </form:select>
+                </div>
+                <div class="form-group" >
+                    <label for="filterCreateDate" ><spring:message code="order.createDate"/></label>
+                    <div class="form-group" >
+                        <div class="input-daterange input-group "  id="filterCreateDate" >
+                            <form:input type="text" path="filterCreateDateFrom" id="filterCreateDateFrom" class="input-sm form-control"  size="7" />
+                            <span class="input-group-addon"><spring:message code="global.to"/></span>
+                            <form:input type="text" path="filterCreateDateTo" id="filterCreateDateTo"  class="input-sm form-control" size="7" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="filterSeller"><spring:message code="order.sellers"/></label>
+                    <form:select path="filterSellerId" id="filterSeller"  class="input-sm form-control">
+                        <form:option value="0" ><spring:message code="global.all"/></form:option>
+                        <form:options items="${orderManagementForm.sellerList}" itemLabel="name" itemValue="id" />
+                    </form:select>
+                </div>
+                <div class="form-group pull-right">
+                    <input type="button" class="btn btn-primary btn-sm" value="<spring:message code="global.reset" />" onclick="javascript:resetFilters()"/>
+                    <input type="button" class="btn btn-primary btn-sm" value="<spring:message code="global.filter"/>" onclick="javascript:submitForm('filter')" />
+                </div>
+
+            </div>
+        </div>
         <table id="orderTable" class="table table-hover"  width="100%">
             <thead>
             <tr role="row">
@@ -205,6 +273,8 @@
             </c:forEach>
             </tbody>
         </table>
+
+        <label><spring:message code="global.totalSellPrice" />:</label>${orderManagementForm.totalSellAmount}
     </div>
 </div>
 <div class="panel panel-primary" id="orderDetailsPanel" style="display: none" >
@@ -222,7 +292,6 @@
                         </span>
                     </div>
                     <div class="panel-body">
-                        <form:form modelAttribute="orderManagementForm" id="orderManagementForm">
                             <form:hidden id="orderId" path="selectedOrder.id" />
                             <form:hidden id="personalDeliveryId" path="selectedOrder.personalDelivery.id" />
                             <form:hidden id="commonDeliveryId" path="selectedOrder.commonDelivery.id" />
@@ -266,7 +335,6 @@
                                     </c:forEach>
                                 </form:select>
                             </div>
-                        </form:form>
                     </div>
                 </div>
         </div>
@@ -328,7 +396,7 @@
                         <label ><spring:message code="commonDelivery.taxRefundRate"/> : </label><span></span>
                     </div>
                     <div  class="form-group" id="tariffInfo">
-                        <label ><spring:message code="commonDelivery.tariff"/> : </label><span></span>
+                        <label ><spring:message code="commonDelivery.tariffRate"/> : </label><span></span>
                     </div>
                 </div>
             </div>
@@ -359,4 +427,5 @@
         </div>
     </div>
 </div>
+</form:form>
 

@@ -16,5 +16,7 @@ public interface IOrderDAO {
 
     List<Order> getOrderWithoutCommonDeliveryList();
 
-    List<Order> getOrderWithoutCommonDeliveryWithFilter(String paymentStatus, Date createDateFrom, Date createDateTo, int sellerId);
+    List<Order> getOrderWithoutCommonDeliveryWithFilter(String paymentStatus, Date createDateFrom, Date createDateTo, int sellerId,int clientId);
+
+    List<Order> getOrderWithCommonDeliverySortByCreateDate();
 }

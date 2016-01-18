@@ -16,6 +16,6 @@ public class CommonDeliveryDAO extends AbstractDAO<CommonDelivery> implements IC
 
     @Override
     public void addCommonDelivery(CommonDelivery commonDelivery) {
-        persist(commonDelivery);
+        merge(commonDelivery);
     }
 }
